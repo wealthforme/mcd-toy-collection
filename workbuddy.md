@@ -12,14 +12,20 @@
 
 4. **骨架搭建**：WorkBuddy 生成 `mcp_client.py`（Streamable HTTP 封装 + 业务状态解析）、`catalog.py`（玩具总库）、`scan_toys.py`（门店扫描 / 跨店比价）、`collection.py`（收藏册 CLI）、`build_web.py`（单文件收藏册页面），并补齐 `README.md`、`MCP_INTEGRATION.md`、`SKILL.md`、`CONTEST_DECLARATION.md`（官方原文未改动）、`.env.example`。
 
-5. **真实数据验证**：实际跑通链路，当前库中共 6 款玩具（当前在售 1、历史款 3、积分兑换 2），其中 4 款拿到麦当劳官方图片，2 款已下市的用本地 SVG 占位卡兜底。
+5. **真实数据验证**：实际跑通链路，当前库中共 6 款玩具（当前在售 1、历史款 3、积分兑换 2），全部拿到麦当劳官方图片。
+
+6. **跨城「找玩具」突破**：此前误判 `query-nearby-stores` 受账号限制只能返回一家门店；WorkBuddy 拉取 `tools/list` 的入参 schema 后逐组合验证，定位到真实原因是 `searchType=2` 时 **city 与 keyword 必须同时传**（缺任一返回 `600058`）。据此重写检索逻辑，用行政区关键词去重扩充门店池，完成 6 城 48 家门店扫描，产出 `data/availability.json`。
+
+7. **图片真实性达标**：发现官方图床规则 `ProductPool/product/MS_<code>_600.png` 对已下市玩具同样返回 200，抽成 `mcp_client.guess_image()` 做 HEAD 校验补全，历史款全部换成官方真图，页面 9 张图校验 0 失败，占位图清零。
+
+8. **按比赛规则补齐成品**：核对官方《活动规则》后补上 README 表格中未列出但规则要求的 `mcp-config.example.json`，并新增 `.gitignore`（隔离凭证与本地收藏状态）、`docs/architecture.svg` 架构图，完成 git 首次提交。
 
 ## WorkBuddy 承担的工作
 
 - MCP 连接配置与连通性验证
 - 接口返回结构的逆向与容错解析（Markdown / JSON / CSV 三种返回形态）
-- 项目骨架与四个脚本的编写、调试、重跑
-- 文档撰写与数据结构设计
+- 项目骨架与全部脚本的编写、调试、重跑
+- 文档撰写、数据结构设计、架构图绘制、合规性自查
 
 ## 备注
 
