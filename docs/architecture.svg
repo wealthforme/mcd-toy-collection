@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" font-family="PingFang SC,Microsoft YaHei,sans-serif">
+  <rect width="960" height="470" fill="#FFF9EC"/>
+  <!-- 左侧：MCP 数据源 -->
+  <text x="30" y="34" font-size="17" font-weight="700" fill="#241A06">麦当劳 MCP Server（只读）</text>
+  <g>
+    <rect x="24" y="52" width="250" height="46" rx="10" fill="#fff" stroke="#DA291C"/>
+    <text x="40" y="73" font-size="13" font-weight="600" fill="#DA291C">query-meal-detail</text>
+    <text x="40" y="90" font-size="11.5" fill="#8A7A55">套餐 rounds → 当期玩具 + 官方图</text>
+
+    <rect x="24" y="108" width="250" height="46" rx="10" fill="#fff" stroke="#DA291C"/>
+    <text x="40" y="129" font-size="13" font-weight="600" fill="#DA291C">query-nearby-stores</text>
+    <text x="40" y="146" font-size="11.5" fill="#8A7A55">城市 + 关键词 → 门店池</text>
+
+    <rect x="24" y="164" width="250" height="46" rx="10" fill="#fff" stroke="#DA291C"/>
+    <text x="40" y="185" font-size="13" font-weight="600" fill="#DA291C">order-list</text>
+    <text x="40" y="202" font-size="11.5" fill="#8A7A55">历史订单 → 已获玩具</text>
+
+    <rect x="24" y="220" width="250" height="46" rx="10" fill="#fff" stroke="#DA291C"/>
+    <text x="40" y="241" font-size="13" font-weight="600" fill="#DA291C">mall-points-products</text>
+    <text x="40" y="258" font-size="11.5" fill="#8A7A55">catRuleIds=2&gt;8 → 积分周边</text>
+
+    <rect x="24" y="276" width="250" height="46" rx="10" fill="#fff" stroke="#DA291C"/>
+    <text x="40" y="297" font-size="13" font-weight="600" fill="#DA291C">campaign-calendar</text>
+    <text x="40" y="314" font-size="11.5" fill="#8A7A55">含玩具的亲子活动</text>
+  </g>
+
+  <!-- 箭头 -->
+  <g stroke="#B99A3E" fill="none" stroke-width="2">
+    <path d="M280 120 L 350 120 L 350 155 L 380 155"/>
+    <path d="M280 230 L 350 230 L 350 175 L 380 175"/>
+    <path d="M280 300 L 350 300 L 350 320 L 380 320"/>
+  </g>
+
+  <!-- 中间：脚本 -->
+  <text x="392" y="34" font-size="17" font-weight="700" fill="#241A06">采集层（Python 标准库）</text>
+  <rect x="386" y="52" width="200" height="300" rx="14" fill="#FFF3CF" stroke="#E8B923" stroke-width="2"/>
+  <text x="404" y="80" font-size="13.5" font-weight="700" fill="#7A5C00">mcp_client.py</text>
+  <text x="404" y="99" font-size="11.5" fill="#8A7A55">Streamable HTTP + 业务码解析</text>
+  <text x="404" y="99" font-size="11.5" fill="none"> </text>
+
+  <rect x="402" y="120" width="168" height="52" rx="10" fill="#fff" stroke="#E8B923"/>
+  <text x="416" y="142" font-size="12.5" font-weight="600" fill="#241A06">catalog.py</text>
+  <text x="416" y="160" font-size="11" fill="#8A7A55">玩具总库 toys.json</text>
+
+  <rect x="402" y="184" width="168" height="52" rx="10" fill="#fff" stroke="#E8B923"/>
+  <text x="416" y="206" font-size="12.5" font-weight="600" fill="#241A06">scan_toys.py</text>
+  <text x="416" y="224" font-size="11" fill="#8A7A55">门店可得性 availability</text>
+
+  <rect x="402" y="248" width="168" height="52" rx="10" fill="#fff" stroke="#E8B923"/>
+  <text x="416" y="270" font-size="12.5" font-weight="600" fill="#241A06">collection.py</text>
+  <text x="416" y="288" font-size="11" fill="#8A7A55">点亮 / 取消 / 统计</text>
+
+  <rect x="402" y="312" width="168" height="30" rx="8" fill="#FFC72C"/>
+  <text x="416" y="332" font-size="12" font-weight="600" fill="#241A06">build_web.py → index.html</text>
+
+  <!-- 右侧：三功能 -->
+  <text x="632" y="34" font-size="17" font-weight="700" fill="#241A06">成品：三合一玩具站</text>
+  <path d="M600 155 L 632 155" stroke="#B99A3E" stroke-width="2" fill="none"/>
+
+  <rect x="630" y="52" width="300" height="88" rx="14" fill="#fff" stroke="#DA291C" stroke-width="2"/>
+  <text x="650" y="78" font-size="14" font-weight="700" fill="#DA291C">🔥 热门精选</text>
+  <text x="650" y="100" font-size="11.5" fill="#8A7A55">当期热送玩具大卡（官方真图）</text>
+  <text x="650" y="120" font-size="11.5" fill="#8A7A55">实测覆盖门店数 / 城市数</text>
+
+  <rect x="630" y="164" width="300" height="88" rx="14" fill="#fff" stroke="#E8B923" stroke-width="2"/>
+  <text x="650" y="190" font-size="14" font-weight="700" fill="#A67A00">📖 电子收藏册</text>
+  <text x="650" y="212" font-size="11.5" fill="#8A7A55">买到即点亮，localStorage 持久化</text>
+  <text x="650" y="232" font-size="11.5" fill="#8A7A55">进度条 / 筛选 / 导出 CSV</text>
+
+  <rect x="630" y="276" width="300" height="88" rx="14" fill="#fff" stroke="#2C7A45" stroke-width="2"/>
+  <text x="650" y="302" font-size="14" font-weight="700" fill="#2C7A45">🔍 找玩具</text>
+  <text x="650" y="324" font-size="11.5" fill="#8A7A55">6 城 48 家门店可得性矩阵</text>
+  <text x="650" y="344" font-size="11.5" fill="#8A7A55">城市 / 营业状态 / 关键词筛选</text>
+
+  <text x="30" y="368" font-size="12.5" fill="#8A7A55">玩具图片全部取自麦当劳官方图床 menu-img.mcd.cn，HEAD 校验 200 后使用；已下市历史款同样可补全真图。</text>
+  <text x="30" y="392" font-size="12.5" fill="#8A7A55">全程只读，未调用 create-order / auto-bind-coupons / draw-lottery 等任何写操作工具。</text>
+  <text x="30" y="430" font-size="12.5" fill="#8A7A55">数据来源：麦当劳中国 MCP Server（mcp.mcd.cn）· 参赛作品，非麦当劳官方产品</text>
+</svg>

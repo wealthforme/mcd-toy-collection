@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>开心乐园餐 · 玩具收藏与找玩具</title>
+<style>
+:root{--bg:#fff9ec;--panel:#fff;--line:#ecdfc0;--text:#241a06;--muted:#8a7a55;--red:#DA291C;--yellow:#FFC72C;--gold:#e8b923}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 "PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 70px}
+header.top{background:linear-gradient(120deg,#DA291C,#FFC72C 125%);color:#fff;border-radius:18px;padding:24px 26px 20px}
+header.top h1{margin:0 0 6px;font-size:25px}
+header.top p{margin:0;font-size:13.5px;opacity:.95}
+.bar{margin-top:14px;background:rgba(255,255,255,.3);border-radius:999px;height:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:#fff;width:33.3%;border-radius:999px}
+.pline{margin-top:7px;font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+nav.tabs{display:flex;gap:8px;margin:18px 0 4px;flex-wrap:wrap}
+nav.tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 18px;font-size:13.5px;cursor:pointer;color:#6b5a33}
+nav.tabs button.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+.page{display:none} .page.on{display:block}
+.hot{background:var(--panel);border:2px solid var(--gold);border-radius:16px;padding:18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.hot img{width:200px;height:200px;object-fit:contain;background:#fff;border-radius:12px}
+.hot .txt{flex:1;min-width:250px}
+.hot h3{margin:2px 0 6px;font-size:20px}
+.hot .meta{margin:0;font-size:12.5px;color:var(--muted)}
+.hot .cov{margin:8px 0 6px;font-size:13px}
+.ribbon{display:inline-block;background:var(--red);color:#fff;font-size:11.5px;border-radius:6px;padding:2px 9px}
+.hot .hint{margin:8px 0 0;font-size:12.3px;color:#7d6a41}
+section{margin:24px 0}
+h2{font-size:18px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:4px;height:16px;background:var(--red);border-radius:2px}
+h2 .cnt{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12px;padding:1px 8px;font-weight:400}
+.desc{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
+.toy{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;position:relative;display:flex;flex-direction:column;gap:8px;transition:.18s}
+.toy .imgbox{background:#fff;border-radius:10px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.toy img{max-width:100%;max-height:100%;object-fit:contain;filter:grayscale(1) opacity(.5)}
+.toy.got{border-color:var(--gold);box-shadow:0 3px 12px rgba(232,185,35,.3)}
+.toy.got img{filter:none;opacity:1}
+.toy h4{margin:0;font-size:14px}
+.toy .meta{margin:0;font-size:11.5px;color:var(--muted)}
+.toy .code{margin:0;font-size:11px;color:#b3a483}
+.badge{margin-left:6px;font-size:10.5px;border-radius:5px;padding:1px 6px}
+.b-avail{background:#e7f5ea;color:#2c7a45}
+.btn{border:1px solid var(--line);background:#fff8e6;border-radius:8px;padding:6px;font-size:13px;cursor:pointer;color:#7a5c00}
+.toy.got .btn{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}
+.stamp{position:absolute;top:8px;right:8px;font-size:11px;background:#f1f2f4;color:#8a8a8a;border-radius:5px;padding:1px 7px}
+.toy.got .stamp{background:var(--gold);color:#3d2c00}
+.at{font-size:11px;color:var(--muted);text-align:right}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.filters input,.filters select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--text)}
+.tagwrap{display:flex;gap:6px;flex-wrap:wrap}
+.tag2{display:inline-block;background:#fff3cf;color:#8a6100;border-radius:6px;padding:2px 9px;font-size:12px}
+.ev{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+.ev img{width:110px;height:78px;object-fit:cover;border-radius:8px}
+.ev h4{margin:0 0 4px;font-size:14px}
+.ev p{margin:0;font-size:12.3px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{padding:9px 10px;font-size:12.6px;border-bottom:1px solid #f2e9d2;text-align:left;vertical-align:top}
+th{background:#fff3cf;color:#7a5c00;font-weight:600}
+td.c{color:#b3a483;font-size:11.5px}
+.addr{color:var(--muted);font-size:11.5px}
+.pill{display:inline-block;border-radius:6px;padding:1px 8px;font-size:11.5px}
+.pill.ok{background:#e7f5ea;color:#2c7a45} .pill.no{background:#f4f4f5;color:#8a8a8a}
+.why{color:#b3a483;font-size:11px}
+.tip{background:#fff8e6;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12.6px;color:#6b5a33;line-height:1.75}
+footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
+</style></head><body><div class="wrap">
+<header class="top">
+  <h1>开心乐园餐 · 玩具收藏与找玩具</h1>
+  <p>全部数据来自麦当劳 MCP Server 只读接口 · 玩具图片取自官方图床</p>
+  <div class="bar"><i></i></div>
+  <div class="pline">
+    <span>收藏进度 <b id="got">2</b> / 6</span>
+    <span>总库 2026-10-12 00:31:18 · 门店扫描 2026-10-11 23:19:07</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="on" data-p="p-hot">🔥 热门精选</button>
+  <button data-p="p-coll">📖 电子收藏册</button>
+  <button data-p="p-find">🔍 找玩具</button>
+</nav>
+
+<div class="page on" id="p-hot">
+  <section style="margin-top:0">
+    <h2>当前热送<span class="cnt">1</span></h2>
+    <p class="desc">全国统一配送的当期联名玩具，数据实时来自套餐选配轮次</p>
+    <div class="hot">
+  <img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具">
+  <div class="txt">
+    <span class="ribbon">当前热送</span>
+    <h3>海绵宝宝×航海王系列玩具</h3>
+    <p class="meta">当前在售 · 海绵宝宝×航海王系列玩具 · 麦当劳深圳方大城餐厅 · 海绵宝宝×航海王系列玩具</p>
+    <p class="cov">实测覆盖：<b>15</b> 家门店 · <b>4</b> 座城市
+      （广州市、成都市、杭州市、深圳市）</p>
+    <div class="tagwrap">
+      <span class="tag2">code 521991</span>
+      <span class="tag2">海绵宝宝×航海王系列玩具</span>
+      <span class="tag2">差价 + ¥0</span>
+    </div>
+    <p class="hint">数据源：<code>query-meal-detail</code> 的选配轮次 + <code>query-nearby-stores</code> 跨城门店校验</p>
+  </div>
+</div>
+  </section>
+  <section>
+    <h2>相关活动<span class="cnt">3</span></h2>
+    <div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/63bd426f45860fbe26025234054bf773.png" alt="">
+    <div><h4>乐享90分钟高质量亲子时间</h4><p>打造高质量陪伴时光🎊 9本热门书籍且每月更新！ 更有开心乐园餐+随机玩具一份🎁 好吃又好玩！快报名参加吧~</p></div></div><div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/3120858b8460868281cdc39f9aae1578.jpg" alt="">
+    <div><h4>麦当劳 X PEACEMINUSONE</h4><p>周边第二弹——联名徽章即将发售 任意餐品消费加39.9元即可得 集结MCD爱心、小雏菊和经典薯条元素🍟 一套三枚🖤限量珍藏 10月15日10:45开售 更有APP专享积分抢先购10:40开抢</p></div></div><div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/fb40c37c172886ee1235c2ed21f3bde4.jpg" alt="">
+    <div><h4>第三周周边即将开售✨限定主题丝巾！</h4><p>丝巾搭配棒球帽的潮流谁懂😎 麦当劳「我就喜欢」限定丝巾 任意餐品消费加 39.9 元即可得 颈间、包袋、手腕、头饰一巾多玩🤔 叠搭联名棒球帽&amp;徽章随心玩出专属潮流造型✨ 10月22日10:45开售 更有APP专享积分抢先购10:40开抢 get时尚icon同款潮流造型</p></div></div>
+  </section>
+  <section>
+    <h2>积分兑换周边<span class="cnt">2</span></h2>
+    <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目）</p>
+    <div class="grid"><div class="toy" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
+  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
+  <div class="info">
+    <h4>酸黄瓜吧唧礼盒</h4>
+    <p class="meta">积分兑换 · 800 积分 · 常规/随机玩具</p>
+    <p class="code">code 17643</p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div><div class="toy" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
+  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
+  <div class="info">
+    <h4>罗技键鼠套装</h4>
+    <p class="meta">积分兑换 · 6666 积分 · 常规/随机玩具</p>
+    <p class="code">code 17694</p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div></div>
+  </section>
+</div>
+
+<div class="page" id="p-coll">
+  <section style="margin-top:0">
+    <h2>收藏册<span class="cnt">6</span></h2>
+    <p class="desc">买到对应玩具就点亮它，状态保存在本机 localStorage；输入关键词可筛选</p>
+    <div class="filters">
+      <input id="q" placeholder="搜索玩具名称 / code" autocomplete="off">
+      <select id="f">
+        <option value="">全部分类</option>
+        <option value="current">当前在售 1</option>
+        <option value="history">历史款 3</option>
+        <option value="mall">积分兑换 2</option>
+      </select>
+      <select id="g">
+        <option value="">全部状态</option>
+        <option value="got">已点亮</option>
+        <option value="todo">未点亮</option>
+      </select>
+      <button class="btn" id="export">导出我的收藏</button>
+    </div>
+    <div class="grid"><div class="toy got" data-code="521991" data-src="current" data-name="海绵宝宝×航海王系列玩具">
+  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具"></div>
+  <div class="info">
+    <h4>海绵宝宝×航海王系列玩具</h4>
+    <p class="meta">当前在售 · 海绵宝宝×航海王系列玩具 · 麦当劳深圳方大城餐厅 · 海绵宝宝×航海王系列玩具</p>
+    <p class="code">code 521991<span class="badge b-avail">15 家门店在送</span></p>
+  </div>
+  <button class="btn">★ 已点亮</button>
+  <div class="stamp">已收集</div>
+  <div class="at">2026-10-11 02:29:30</div>
+</div><div class="toy got" data-code="521325" data-src="history" data-name="樱桃小丸子定制玩具">
+  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521325_600.png" alt="樱桃小丸子定制玩具"></div>
+  <div class="info">
+    <h4>樱桃小丸子定制玩具</h4>
+    <p class="meta">历史款（已下市） · 常规/随机玩具</p>
+    <p class="code">code 521325</p>
+  </div>
+  <button class="btn">★ 已点亮</button>
+  <div class="stamp">已收集</div>
+  <div class="at">2026-10-11 23:26:16</div>
+</div><div class="toy" data-code="521417" data-src="history" data-name="开心乐园小马宝莉&amp;变形金刚系列玩具">
+  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521417_600.png" alt="开心乐园小马宝莉&amp;变形金刚系列玩具"></div>
+  <div class="info">
+    <h4>开心乐园小马宝莉&amp;变形金刚系列玩具</h4>
+    <p class="meta">历史款（已下市） · 常规/随机玩具</p>
+    <p class="code">code 521417</p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div><div class="toy" data-code="7001" data-src="history" data-name="随机玩具1个">
+  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/20240828/product/MS_7001_600.png" alt="随机玩具1个"></div>
+  <div class="info">
+    <h4>随机玩具1个</h4>
+    <p class="meta">历史款 · 常规/随机玩具</p>
+    <p class="code">code 7001<span class="badge b-avail">4 家门店在送</span></p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div><div class="toy" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
+  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
+  <div class="info">
+    <h4>酸黄瓜吧唧礼盒</h4>
+    <p class="meta">积分兑换 · 800 积分 · 常规/随机玩具</p>
+    <p class="code">code 17643</p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div><div class="toy" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
+  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
+  <div class="info">
+    <h4>罗技键鼠套装</h4>
+    <p class="meta">积分兑换 · 6666 积分 · 常规/随机玩具</p>
+    <p class="code">code 17694</p>
+  </div>
+  <button class="btn">☆ 点亮</button>
+  <div class="stamp">未点亮</div>
+  
+</div></div>
+  </section>
+</div>
+
+<div class="page" id="p-find">
+  <section style="margin-top:0">
+    <h2>找玩具 · 门店可得性<span class="cnt">48</span></h2>
+    <p class="desc">扫描时间 2026-10-11 23:19:07 · 覆盖 6 座城市 / 48 家门店，
+      其中 <b>17</b> 家当时营业并可点餐，识别到 2 款在送玩具。
+      「不可点餐」多为门店打烊（返回 600057），白天重跑 <code>scan_toys.py</code> 可显著提高覆盖率。</p>
+    <div class="filters">
+      <input id="sq" placeholder="搜索门店 / 城市 / 玩具 / code" autocomplete="off">
+      <select id="sc"><option value="">全部城市</option>
+        <option value="上海市">上海市</option><option value="北京市">北京市</option><option value="广州市">广州市</option><option value="成都市">成都市</option><option value="杭州市">杭州市</option><option value="深圳市">深圳市</option>
+      </select>
+      <label style="font-size:12.6px;color:#6b5a33"><input type="checkbox" id="so"> 只看营业中</label>
+    </div>
+    <table>
+      <thead><tr><th>门店</th><th>城市</th><th>code</th><th>当前在送玩具</th><th>状态</th></tr></thead>
+      <tbody id="sb"><tr data-city="广州市" data-open="1">
+      <td>麦当劳广州天源路餐厅<br><span class="addr">天源路5号</span></td>
+      <td>广州市</td>
+      <td class="c">1400359</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="广州市" data-open="1">
+      <td>麦当劳广州客村餐厅<br><span class="addr">新港中路381号的201号试验楼首层2-2、2-3号商铺</span></td>
+      <td>广州市</td>
+      <td class="c">1400881</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="广州市" data-open="1">
+      <td>麦当劳广州新港中路餐厅<br><span class="addr">新港中路350号丽影广场</span></td>
+      <td>广州市</td>
+      <td class="c">1400217</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="广州市" data-open="1">
+      <td>麦当劳广州金菊路餐厅<br><span class="addr">金菊路22号101房</span></td>
+      <td>广州市</td>
+      <td class="c">1400502</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="广州市" data-open="1">
+      <td>麦当劳广州长兴路餐厅<br><span class="addr">长兴路13号</span></td>
+      <td>广州市</td>
+      <td class="c">1400211</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都一环路南四段高升桥餐厅<br><span class="addr">一环路南四段19号</span></td>
+      <td>成都市</td>
+      <td class="c">3450268</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都人民公园餐厅<br><span class="addr">汪家拐街道祠堂街54-3号</span></td>
+      <td>成都市</td>
+      <td class="c">3450351</td>
+      <td>随机玩具1个、海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都凯德魅力城餐厅<br><span class="addr">万科路9号</span></td>
+      <td>成都市</td>
+      <td class="c">3450080</td>
+      <td>随机玩具1个</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都成华区迎晖路餐厅<br><span class="addr">迎晖路99号地铁c口中环壹号一层33号商铺</span></td>
+      <td>成都市</td>
+      <td class="c">3450249</td>
+      <td>随机玩具1个、海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都成华区鹏瑞利东站广场餐厅<br><span class="addr">丹景山路28号鹏瑞利国际医疗健康中心A2-01-01a商铺</span></td>
+      <td>成都市</td>
+      <td class="c">3450336</td>
+      <td>随机玩具1个</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都洗面桥街餐厅<br><span class="addr">洗面桥街20号</span></td>
+      <td>成都市</td>
+      <td class="c">3450158</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="成都市" data-open="1">
+      <td>麦当劳成都锦江区大凉山路餐厅<br><span class="addr">大凉山路天廊广场3号楼一层D4-101号商铺及负一层C01号商铺</span></td>
+      <td>成都市</td>
+      <td class="c">3450198</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="杭州市" data-open="1">
+      <td>麦当劳杭州上城区工联大厦餐厅<br><span class="addr">学士路31号工联大厦201室</span></td>
+      <td>杭州市</td>
+      <td class="c">3330658</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="深圳市" data-open="1">
+      <td>麦当劳深圳南山餐厅<br><span class="addr">南山大道愉康大厦一楼55-62号</span></td>
+      <td>深圳市</td>
+      <td class="c">1420009</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="深圳市" data-open="1">
+      <td>麦当劳深圳桂庙路餐厅<br><span class="addr">南山大道１１７５号新绿岛大厦１层Ｂ号</span></td>
+      <td>深圳市</td>
+      <td class="c">1420207</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="深圳市" data-open="1">
+      <td>麦当劳深圳湾一店餐厅<br><span class="addr">粤海街道兰香一街兰桂三路海王星辰大厦104号商铺</span></td>
+      <td>深圳市</td>
+      <td class="c">1420576</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="深圳市" data-open="1">
+      <td>麦当劳深圳鸿瑞花园餐厅<br><span class="addr">南光路65号鸿瑞花园裙楼酒楼01层1001号</span></td>
+      <td>深圳市</td>
+      <td class="c">1420876</td>
+      <td>海绵宝宝×航海王系列玩具</td>
+      <td><span class="pill ok">营业中</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海南汇祝桥天和餐厅<br><span class="addr">祝桥镇百熙路590号一层商铺</span></td>
+      <td>上海市</td>
+      <td class="c">1450399</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海天潼路地铁站餐厅<br><span class="addr">天潼路567号B1-13</span></td>
+      <td>上海市</td>
+      <td class="c">1450424</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海新闸路餐厅<br><span class="addr">新闸路245号（近黄河路）</span></td>
+      <td>上海市</td>
+      <td class="c">1450086</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海施镇路餐厅<br><span class="addr">施镇路396弄1号麦当劳餐厅</span></td>
+      <td>上海市</td>
+      <td class="c">1450478</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海浦东机场五洲北路餐厅<br><span class="addr">浦东国际机场轨道交通车站磁悬浮站二层A01房屋L1-1店铺</span></td>
+      <td>上海市</td>
+      <td class="c">1450519</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海闸北曲阜路大悦城餐厅<br><span class="addr">西藏北路166号B1层NB110商铺</span></td>
+      <td>上海市</td>
+      <td class="c">1450724</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海闸北虬江路永兴汇餐厅<br><span class="addr">虬江路1307号12幢101室</span></td>
+      <td>上海市</td>
+      <td class="c">1450657</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="上海市" data-open="0">
+      <td>麦当劳上海雅居乐餐厅<br><span class="addr">西藏中路525号</span></td>
+      <td>上海市</td>
+      <td class="c">1450195</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>北京星火西路快捷小站<br><span class="addr">北京朝阳站候车厅2层G4-10</span></td>
+      <td>北京市</td>
+      <td class="c">1950538001</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京东单北大街餐厅<br><span class="addr">东单北大街112、114号</span></td>
+      <td>北京市</td>
+      <td class="c">1951035</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京中粮广场餐厅<br><span class="addr">建国门内大街8号北京中粮广场C座G138-141</span></td>
+      <td>北京市</td>
+      <td class="c">1950970</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京北京站北广场餐厅<br><span class="addr">北京火车站北广场bjz-3-16-2号商铺（送货前务必电话联系）</span></td>
+      <td>北京市</td>
+      <td class="c">1951029</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京建国门餐厅<br><span class="addr">建外大街24号底商麦当劳</span></td>
+      <td>北京市</td>
+      <td class="c">1950035</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京朝阳站三层候车餐厅(三层出发层)<br><span class="addr">北京朝阳站三层G2-10号</span></td>
+      <td>北京市</td>
+      <td class="c">1950538</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京雅宝路餐厅<br><span class="addr">雅宝路7号1号楼1层C101商铺</span></td>
+      <td>北京市</td>
+      <td class="c">1950973</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="北京市" data-open="0">
+      <td>麦当劳北京青年北路(姚家园万象汇)餐厅<br><span class="addr">青年北路35号院1号姚家园万象汇L217+L218</span></td>
+      <td>北京市</td>
+      <td class="c">1950918</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="广州市" data-open="0">
+      <td>麦当劳广州南方医科大餐厅<br><span class="addr">沙太南路1023号-1063号南方医科大学二食堂房屋二层自编001号商铺</span></td>
+      <td>广州市</td>
+      <td class="c">1400977</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="广州市" data-open="0">
+      <td>麦当劳广州塔餐厅<br><span class="addr">阅江西路222号广州塔首层116及117号商铺</span></td>
+      <td>广州市</td>
+      <td class="c">1400335</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="广州市" data-open="0">
+      <td>麦当劳广州艺苑路创意园餐厅<br><span class="addr">新港中路397号自编56号</span></td>
+      <td>广州市</td>
+      <td class="c">1400856</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="成都市" data-open="0">
+      <td>麦当劳成都东站出发层东广场餐厅(A26检票口二楼)<br><span class="addr">成都东站出发夹层(A26二楼)</span></td>
+      <td>成都市</td>
+      <td class="c">3450363</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>杭州岳庙北山街88-5号商铺快捷小站<br><span class="addr">西湖街道北山街88-5号商铺</span></td>
+      <td>杭州市</td>
+      <td class="c">3330536001</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州上城区延安路东坡宾馆餐厅<br><span class="addr">延安路227号</span></td>
+      <td>杭州市</td>
+      <td class="c">3330604</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州拱墅区茶叶大厦餐厅<br><span class="addr">延安路310号茶叶大厦</span></td>
+      <td>杭州市</td>
+      <td class="c">3330489</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州涌金餐厅<br><span class="addr">延安南路139号涌金广场一层</span></td>
+      <td>杭州市</td>
+      <td class="c">3330010</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州湖滨路餐厅<br><span class="addr">湖滨路39号华侨饭店3号楼一楼101室麦当劳</span></td>
+      <td>杭州市</td>
+      <td class="c">3330412</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州灵隐景区餐厅<br><span class="addr">天竺路15号</span></td>
+      <td>杭州市</td>
+      <td class="c">3330257</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="杭州市" data-open="0">
+      <td>麦当劳杭州西湖区岳庙码头餐厅<br><span class="addr">西湖街道西湖风景名胜区湖口路5-3号麦当劳餐厅</span></td>
+      <td>杭州市</td>
+      <td class="c">3330536</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="深圳市" data-open="0">
+      <td>麦当劳深圳后海地铁站餐厅<br><span class="addr">航天科技广场B座负一楼</span></td>
+      <td>深圳市</td>
+      <td class="c">1420535</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="深圳市" data-open="0">
+      <td>麦当劳深圳后海汇餐厅<br><span class="addr">粤海街道海珠社区后海滨路3288号后海汇B1—17、18、19</span></td>
+      <td>深圳市</td>
+      <td class="c">1420920</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="深圳市" data-open="0">
+      <td>麦当劳深圳文心六路餐厅<br><span class="addr">文心六路保利文化广场商业A区一层A1-49-01商铺</span></td>
+      <td>深圳市</td>
+      <td class="c">1420238</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr><tr data-city="深圳市" data-open="0">
+      <td>麦当劳深圳湾文化广场餐厅<br><span class="addr">粤海街道深圳湾文化广场B1-25-26-27号商铺</span></td>
+      <td>深圳市</td>
+      <td class="c">1421182</td>
+      <td>—</td>
+      <td><span class="pill no">不可点餐</span><br><span class="why">600057 门店可能已关闭或不在营业时间</span></td>
+    </tr></tbody>
+    </table>
+  </section>
+  <div class="tip">
+    <b>刷新数据</b>：<br>
+    <code>python scripts/scan_toys.py --per-city 8</code>　跨 6 城采样门店并写入 <code>data/availability.json</code><br>
+    <code>python scripts/scan_toys.py --cities 深圳市,广州市 --per-city 12</code>　指定城市与门店密度<br>
+    <code>python scripts/catalog.py</code>　重建玩具总库（当前款 / 历史订单 / 积分周边 / 活动）<br>
+    <code>python scripts/collection.py collect 521991 --store 1420544</code>　命令行点亮玩具（写回 <code>data/collection.json</code>）<br>
+    门店检索注意：<code>query-nearby-stores</code> 的 <code>searchType=2</code> 必须 <b>city 与 keyword 同时传</b>，
+    只传其一会报 <code>600058</code>。
+  </div>
+</div>
+
+<footer>数据来源：麦当劳中国 MCP Server（mcp.mcd.cn）· 仅用于学习与技术验证，非麦当劳官方产品</footer>
+</div>
+<script>
+const KEY='mcd_toy_collection_v1';
+let got=JSON.parse(localStorage.getItem(KEY)||'{}');
+const root=document.body;
+root.querySelectorAll('.toy').forEach(el=>{
+  const c=el.dataset.code;
+  if(got[c]) {
+    el.classList.add('got');
+    el.querySelector('.btn').textContent='★ 已点亮';
+    el.querySelector('.stamp').textContent='已收集';
+  }
+});
+root.addEventListener('click',ev=>{
+  const b=ev.target.closest('.toy .btn'); if(!b) return;
+  const el=b.closest('.toy'), c=el.dataset.code;
+  if(got[c]){delete got[c];el.classList.remove('got');b.textContent='☆ 点亮';el.querySelector('.stamp').textContent='未点亮';}
+  else{got[c]={at:new Date().toISOString().slice(0,10)};el.classList.add('got');b.textContent='★ 已点亮';el.querySelector('.stamp').textContent='已收集';}
+  localStorage.setItem(KEY,JSON.stringify(got));
+  document.getElementById('got').textContent=Object.keys(got).length;
+  applyFilter();
+});
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); document.getElementById(b.dataset.p).classList.add('on');
+}));
+const q=document.getElementById('q'),f=document.getElementById('f'),g=document.getElementById('g');
+function applyFilter(){
+  const kw=(q.value||'').trim().toLowerCase();
+  root.querySelectorAll('.toy').forEach(el=>{
+    const okKw=!kw||(el.dataset.name+' '+el.dataset.code).toLowerCase().includes(kw);
+    const okF=!f.value||el.dataset.src===f.value;
+    const okG=!g.value||(g.value==='got'?!!got[el.dataset.code]:!got[el.dataset.code]);
+    el.style.display=(okKw&&okF&&okG)?'':'none';
+  });
+}
+[q,f,g].forEach(x=>x.addEventListener('input',applyFilter));
+document.getElementById('export').addEventListener('click',()=>{
+  const rows=Object.keys(got).map(c=>{
+    const el=root.querySelector('.toy[data-code="'+c+'"]');
+    return c+','+(el?el.dataset.name:'')+','+got[c].at;
+  });
+  const blob=new Blob([['code','name','at'].join(',')].concat(rows).join('\n'),{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_toys.csv';a.click();
+});
+const sq=document.getElementById('sq'),sc=document.getElementById('sc'),so=document.getElementById('so');
+function filterStores(){
+  const kw=(sq.value||'').trim().toLowerCase();
+  document.querySelectorAll('#sb tr').forEach(tr=>{
+    const okCity=!sc.value||tr.dataset.city===sc.value;
+    const okOpen=!so.checked||tr.dataset.open==='1';
+    const okKw=!kw||tr.textContent.toLowerCase().includes(kw);
+    tr.style.display=(okCity&&okOpen&&okKw)?'':'none';
+  });
+}
+if(sq)[sq,sc,so].forEach(x=>x.addEventListener('input',filterStores));
+</script>
+</body></html>

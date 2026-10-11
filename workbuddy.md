@@ -1,0 +1,27 @@
+# 使用 WorkBuddy 开发的对话上下文
+
+本项目「麦麦玩具收藏册」全程使用 WorkBuddy（麦当劳程序员创意开发大赛官方合作伙伴）开发。
+
+## 开发过程
+
+1. **MCP 接入**：在 WorkBuddy【专家·技能·连接器】→【连接器】→【自定义连接器】→【配置 MCP】中写入 `mcd-mcp`（`https://mcp.mcd.cn`，Bearer Token），完成连接并跑通 `tools/list`，实测拿到 35 个工具。
+
+2. **能力勘探**：对全部只读工具做全量调用与对抗性审查，输出一份实测展示页，发现并修正了 9 类问题（HTTP 200 ≠ 业务成功、`calculate-price` 数量字段是 `quantity` 且金额单位为分、`mall-points-products` 需 `catRuleIds` 才能拿到积分类商品、`query-party-store` 门店编码字段是 `code`、`query-meals` 餐品列表在 `categories` 里而价格在 `meals` 映射里等）。
+
+3. **选题确认**：在实测数据中检索「玩具」，发现 `query-meal-detail` 的 `rounds[]` 里带有**当前门店赠送的玩具**（海绵宝宝×航海王系列玩具，code 521991），且用玩具 code 再查一次即可拿到官方玩具图。官方文档并未说明这一点，遂定为项目核心。
+
+4. **骨架搭建**：WorkBuddy 生成 `mcp_client.py`（Streamable HTTP 封装 + 业务状态解析）、`catalog.py`（玩具总库）、`scan_toys.py`（门店扫描 / 跨店比价）、`collection.py`（收藏册 CLI）、`build_web.py`（单文件收藏册页面），并补齐 `README.md`、`MCP_INTEGRATION.md`、`SKILL.md`、`CONTEST_DECLARATION.md`（官方原文未改动）、`.env.example`。
+
+5. **真实数据验证**：实际跑通链路，当前库中共 6 款玩具（当前在售 1、历史款 3、积分兑换 2），其中 4 款拿到麦当劳官方图片，2 款已下市的用本地 SVG 占位卡兜底。
+
+## WorkBuddy 承担的工作
+
+- MCP 连接配置与连通性验证
+- 接口返回结构的逆向与容错解析（Markdown / JSON / CSV 三种返回形态）
+- 项目骨架与四个脚本的编写、调试、重跑
+- 文档撰写与数据结构设计
+
+## 备注
+
+- 全程未调用任何写操作工具（下单 / 领券 / 抽奖 / 建地址）
+- 真实 Token 仅存于本地 `~/.workbuddy/mcp.json`，未写入任何项目文件

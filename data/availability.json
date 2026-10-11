@@ -1,0 +1,807 @@
+{
+ "scannedAt": "2026-10-11 23:19:07",
+ "params": {
+  "perCity": 8
+ },
+ "cityCount": 6,
+ "storeCount": 48,
+ "openStoreCount": 17,
+ "toyCount": 2,
+ "toys": [
+  {
+   "code": "521991",
+   "name": "海绵宝宝×航海王系列玩具",
+   "image": "https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png",
+   "series": "海绵宝宝×航海王系列玩具",
+   "round": "海绵宝宝×航海王系列玩具",
+   "diffPrice": "+ ¥0",
+   "meal": "9900016057",
+   "stores": [
+    {
+     "city": "深圳市",
+     "storeCode": "1420576",
+     "storeName": "麦当劳深圳湾一店餐厅",
+     "address": "粤海街道兰香一街兰桂三路海王星辰大厦104号商铺"
+    },
+    {
+     "city": "深圳市",
+     "storeCode": "1420207",
+     "storeName": "麦当劳深圳桂庙路餐厅",
+     "address": "南山大道１１７５号新绿岛大厦１层Ｂ号"
+    },
+    {
+     "city": "深圳市",
+     "storeCode": "1420009",
+     "storeName": "麦当劳深圳南山餐厅",
+     "address": "南山大道愉康大厦一楼55-62号"
+    },
+    {
+     "city": "深圳市",
+     "storeCode": "1420876",
+     "storeName": "麦当劳深圳鸿瑞花园餐厅",
+     "address": "南光路65号鸿瑞花园裙楼酒楼01层1001号"
+    },
+    {
+     "city": "广州市",
+     "storeCode": "1400881",
+     "storeName": "麦当劳广州客村餐厅",
+     "address": "新港中路381号的201号试验楼首层2-2、2-3号商铺"
+    },
+    {
+     "city": "广州市",
+     "storeCode": "1400502",
+     "storeName": "麦当劳广州金菊路餐厅",
+     "address": "金菊路22号101房"
+    },
+    {
+     "city": "广州市",
+     "storeCode": "1400217",
+     "storeName": "麦当劳广州新港中路餐厅",
+     "address": "新港中路350号丽影广场"
+    },
+    {
+     "city": "广州市",
+     "storeCode": "1400359",
+     "storeName": "麦当劳广州天源路餐厅",
+     "address": "天源路5号"
+    },
+    {
+     "city": "广州市",
+     "storeCode": "1400211",
+     "storeName": "麦当劳广州长兴路餐厅",
+     "address": "长兴路13号"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450249",
+     "storeName": "麦当劳成都成华区迎晖路餐厅",
+     "address": "迎晖路99号地铁c口中环壹号一层33号商铺"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450198",
+     "storeName": "麦当劳成都锦江区大凉山路餐厅",
+     "address": "大凉山路天廊广场3号楼一层D4-101号商铺及负一层C01号商铺"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450268",
+     "storeName": "麦当劳成都一环路南四段高升桥餐厅",
+     "address": "一环路南四段19号"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450158",
+     "storeName": "麦当劳成都洗面桥街餐厅",
+     "address": "洗面桥街20号"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450351",
+     "storeName": "麦当劳成都人民公园餐厅",
+     "address": "汪家拐街道祠堂街54-3号"
+    },
+    {
+     "city": "杭州市",
+     "storeCode": "3330658",
+     "storeName": "麦当劳杭州上城区工联大厦餐厅",
+     "address": "学士路31号工联大厦201室"
+    }
+   ],
+   "storeCount": 15,
+   "imageIsPlaceholder": false
+  },
+  {
+   "code": "7001",
+   "name": "随机玩具1个",
+   "image": "https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_7001_600.png",
+   "series": "常规/随机玩具",
+   "round": "随机玩具1个",
+   "diffPrice": "+ ¥0",
+   "meal": "9900005422",
+   "stores": [
+    {
+     "city": "成都市",
+     "storeCode": "3450336",
+     "storeName": "麦当劳成都成华区鹏瑞利东站广场餐厅",
+     "address": "丹景山路28号鹏瑞利国际医疗健康中心A2-01-01a商铺"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450249",
+     "storeName": "麦当劳成都成华区迎晖路餐厅",
+     "address": "迎晖路99号地铁c口中环壹号一层33号商铺"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450080",
+     "storeName": "麦当劳成都凯德魅力城餐厅",
+     "address": "万科路9号"
+    },
+    {
+     "city": "成都市",
+     "storeCode": "3450351",
+     "storeName": "麦当劳成都人民公园餐厅",
+     "address": "汪家拐街道祠堂街54-3号"
+    }
+   ],
+   "storeCount": 4,
+   "imageIsPlaceholder": false
+  }
+ ],
+ "stores": [
+  {
+   "storeCode": "1421182",
+   "storeName": "麦当劳深圳湾文化广场餐厅",
+   "address": "粤海街道深圳湾文化广场B1-25-26-27号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "深圳市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1420920",
+   "storeName": "麦当劳深圳后海汇餐厅",
+   "address": "粤海街道海珠社区后海滨路3288号后海汇B1—17、18、19",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "深圳市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1420535",
+   "storeName": "麦当劳深圳后海地铁站餐厅",
+   "address": "航天科技广场B座负一楼",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "深圳市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1420238",
+   "storeName": "麦当劳深圳文心六路餐厅",
+   "address": "文心六路保利文化广场商业A区一层A1-49-01商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "深圳市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1420576",
+   "storeName": "麦当劳深圳湾一店餐厅",
+   "address": "粤海街道兰香一街兰桂三路海王星辰大厦104号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "深圳市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 3
+  },
+  {
+   "storeCode": "1420207",
+   "storeName": "麦当劳深圳桂庙路餐厅",
+   "address": "南山大道１１７５号新绿岛大厦１层Ｂ号",
+   "beCode": null,
+   "hitKeyword": "南山",
+   "city": "深圳市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 4
+  },
+  {
+   "storeCode": "1420009",
+   "storeName": "麦当劳深圳南山餐厅",
+   "address": "南山大道愉康大厦一楼55-62号",
+   "beCode": null,
+   "hitKeyword": "南山",
+   "city": "深圳市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "1420876",
+   "storeName": "麦当劳深圳鸿瑞花园餐厅",
+   "address": "南光路65号鸿瑞花园裙楼酒楼01层1001号",
+   "beCode": null,
+   "hitKeyword": "南山",
+   "city": "深圳市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "1450724",
+   "storeName": "麦当劳上海闸北曲阜路大悦城餐厅",
+   "address": "西藏北路166号B1层NB110商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450086",
+   "storeName": "麦当劳上海新闸路餐厅",
+   "address": "新闸路245号（近黄河路）",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450657",
+   "storeName": "麦当劳上海闸北虬江路永兴汇餐厅",
+   "address": "虬江路1307号12幢101室",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450195",
+   "storeName": "麦当劳上海雅居乐餐厅",
+   "address": "西藏中路525号",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450424",
+   "storeName": "麦当劳上海天潼路地铁站餐厅",
+   "address": "天潼路567号B1-13",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450519",
+   "storeName": "麦当劳上海浦东机场五洲北路餐厅",
+   "address": "浦东国际机场轨道交通车站磁悬浮站二层A01房屋L1-1店铺",
+   "beCode": null,
+   "hitKeyword": "浦东",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450478",
+   "storeName": "麦当劳上海施镇路餐厅",
+   "address": "施镇路396弄1号麦当劳餐厅",
+   "beCode": null,
+   "hitKeyword": "浦东",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1450399",
+   "storeName": "麦当劳上海南汇祝桥天和餐厅",
+   "address": "祝桥镇百熙路590号一层商铺",
+   "beCode": null,
+   "hitKeyword": "浦东",
+   "city": "上海市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950970",
+   "storeName": "麦当劳北京中粮广场餐厅",
+   "address": "建国门内大街8号北京中粮广场C座G138-141",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1951029",
+   "storeName": "麦当劳北京北京站北广场餐厅",
+   "address": "北京火车站北广场bjz-3-16-2号商铺（送货前务必电话联系）",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950035",
+   "storeName": "麦当劳北京建国门餐厅",
+   "address": "建外大街24号底商麦当劳",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1951035",
+   "storeName": "麦当劳北京东单北大街餐厅",
+   "address": "东单北大街112、114号",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950973",
+   "storeName": "麦当劳北京雅宝路餐厅",
+   "address": "雅宝路7号1号楼1层C101商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950538",
+   "storeName": "麦当劳北京朝阳站三层候车餐厅(三层出发层)",
+   "address": "北京朝阳站三层G2-10号",
+   "beCode": null,
+   "hitKeyword": "朝阳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950538001",
+   "storeName": "北京星火西路快捷小站",
+   "address": "北京朝阳站候车厅2层G4-10",
+   "beCode": null,
+   "hitKeyword": "朝阳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1950918",
+   "storeName": "麦当劳北京青年北路(姚家园万象汇)餐厅",
+   "address": "青年北路35号院1号姚家园万象汇L217+L218",
+   "beCode": null,
+   "hitKeyword": "朝阳",
+   "city": "北京市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1400335",
+   "storeName": "麦当劳广州塔餐厅",
+   "address": "阅江西路222号广州塔首层116及117号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "广州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1400856",
+   "storeName": "麦当劳广州艺苑路创意园餐厅",
+   "address": "新港中路397号自编56号",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "广州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "1400881",
+   "storeName": "麦当劳广州客村餐厅",
+   "address": "新港中路381号的201号试验楼首层2-2、2-3号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "广州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 4
+  },
+  {
+   "storeCode": "1400502",
+   "storeName": "麦当劳广州金菊路餐厅",
+   "address": "金菊路22号101房",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "广州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 1
+  },
+  {
+   "storeCode": "1400217",
+   "storeName": "麦当劳广州新港中路餐厅",
+   "address": "新港中路350号丽影广场",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "广州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 4
+  },
+  {
+   "storeCode": "1400359",
+   "storeName": "麦当劳广州天源路餐厅",
+   "address": "天源路5号",
+   "beCode": null,
+   "hitKeyword": "天河",
+   "city": "广州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "1400211",
+   "storeName": "麦当劳广州长兴路餐厅",
+   "address": "长兴路13号",
+   "beCode": null,
+   "hitKeyword": "天河",
+   "city": "广州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "1400977",
+   "storeName": "麦当劳广州南方医科大餐厅",
+   "address": "沙太南路1023号-1063号南方医科大学二食堂房屋二层自编001号商铺",
+   "beCode": null,
+   "hitKeyword": "天河",
+   "city": "广州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3450336",
+   "storeName": "麦当劳成都成华区鹏瑞利东站广场餐厅",
+   "address": "丹景山路28号鹏瑞利国际医疗健康中心A2-01-01a商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "7001",
+     "name": "随机玩具1个"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "3450363",
+   "storeName": "麦当劳成都东站出发层东广场餐厅(A26检票口二楼)",
+   "address": "成都东站出发夹层(A26二楼)",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "成都市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3450249",
+   "storeName": "麦当劳成都成华区迎晖路餐厅",
+   "address": "迎晖路99号地铁c口中环壹号一层33号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "7001",
+     "name": "随机玩具1个"
+    },
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 8
+  },
+  {
+   "storeCode": "3450080",
+   "storeName": "麦当劳成都凯德魅力城餐厅",
+   "address": "万科路9号",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "7001",
+     "name": "随机玩具1个"
+    }
+   ],
+   "mealCount": 3
+  },
+  {
+   "storeCode": "3450198",
+   "storeName": "麦当劳成都锦江区大凉山路餐厅",
+   "address": "大凉山路天廊广场3号楼一层D4-101号商铺及负一层C01号商铺",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 3
+  },
+  {
+   "storeCode": "3450268",
+   "storeName": "麦当劳成都一环路南四段高升桥餐厅",
+   "address": "一环路南四段19号",
+   "beCode": null,
+   "hitKeyword": "武侯",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "3450158",
+   "storeName": "麦当劳成都洗面桥街餐厅",
+   "address": "洗面桥街20号",
+   "beCode": null,
+   "hitKeyword": "武侯",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "3450351",
+   "storeName": "麦当劳成都人民公园餐厅",
+   "address": "汪家拐街道祠堂街54-3号",
+   "beCode": null,
+   "hitKeyword": "武侯",
+   "city": "成都市",
+   "open": true,
+   "toys": [
+    {
+     "code": "7001",
+     "name": "随机玩具1个"
+    },
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 6
+  },
+  {
+   "storeCode": "3330604",
+   "storeName": "麦当劳杭州上城区延安路东坡宾馆餐厅",
+   "address": "延安路227号",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330658",
+   "storeName": "麦当劳杭州上城区工联大厦餐厅",
+   "address": "学士路31号工联大厦201室",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "杭州市",
+   "open": true,
+   "toys": [
+    {
+     "code": "521991",
+     "name": "海绵宝宝×航海王系列玩具"
+    }
+   ],
+   "mealCount": 5
+  },
+  {
+   "storeCode": "3330412",
+   "storeName": "麦当劳杭州湖滨路餐厅",
+   "address": "湖滨路39号华侨饭店3号楼一楼101室麦当劳",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330489",
+   "storeName": "麦当劳杭州拱墅区茶叶大厦餐厅",
+   "address": "延安路310号茶叶大厦",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330010",
+   "storeName": "麦当劳杭州涌金餐厅",
+   "address": "延安南路139号涌金广场一层",
+   "beCode": null,
+   "hitKeyword": "麦当劳",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330257",
+   "storeName": "麦当劳杭州灵隐景区餐厅",
+   "address": "天竺路15号",
+   "beCode": null,
+   "hitKeyword": "西湖",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330536001",
+   "storeName": "杭州岳庙北山街88-5号商铺快捷小站",
+   "address": "西湖街道北山街88-5号商铺",
+   "beCode": null,
+   "hitKeyword": "西湖",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  },
+  {
+   "storeCode": "3330536",
+   "storeName": "麦当劳杭州西湖区岳庙码头餐厅",
+   "address": "西湖街道西湖风景名胜区湖口路5-3号麦当劳餐厅",
+   "beCode": null,
+   "hitKeyword": "西湖",
+   "city": "杭州市",
+   "reason": "600057 门店可能已关闭或不在营业时间",
+   "toys": [],
+   "mealCount": 0,
+   "open": false
+  }
+ ],
+ "missed": []
+}

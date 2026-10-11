@@ -1,0 +1,153 @@
+# 麦麦玩具收藏册 · MCD Happy Meal Toy Collection
+
+基于**麦当劳中国 MCP Server** 的「开心乐园餐玩具」电子收藏册：买了开心乐园餐、拿到哪款玩具，就在收藏册里点亮它；同时能看当前门店**正在送哪款玩具**，以及按门店**找玩具**。
+
+所有数据均来自麦当劳官方 MCP 实时接口，无爬虫、无 mock。
+
+![架构图](./docs/architecture.svg)
+
+> 实测样本：6 城 48 家门店扫描 → 当期主推「海绵宝宝×航海王系列玩具」覆盖 15 家门店 / 4 座城市。
+
+---
+
+## 功能
+
+| 功能 | 说明 | 数据来源 |
+|---|---|---|
+| 🎯 **当前热送** | 当期联名玩具大卡（官方图 + 选配轮次 + 实测覆盖门店/城市数） | `query-meal-detail` + 跨城 `availability.json` |
+| 📖 **电子收藏册** | 玩具卡片墙，点击点亮/取消，进度条、搜索、分类筛选、导出 CSV | `data/toys.json` + `data/collection.json` |
+| 🔍 **找玩具** | 6 城 48 家门店扫描，列出「哪家店在送哪款」、城市/营业状态筛选 | `scan_toys.py` → `data/availability.json` |
+| 🕓 **历史款** | 从历史订单挖出曾拿到的玩具，自动入库 | `order-list` + `query-meal-detail` |
+| 🎁 **积分兑换** | 麦麦商城可积分兑换的玩具周边 | `mall-points-products`（`catRuleIds=2>8`） |
+| 📅 **相关活动** | 提到玩具/乐园餐的官方活动 | `campaign-calendar` |
+
+**玩具图片**（全部为官方图床真实资源，无占位图）：
+- 在售款：取 `query-meal-detail` 对玩具 code 返回的 `image`；
+- 历史 / 下市款：按官方图床规则 `https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_<code>_600.png` 兜底，HEAD 校验 200 才采用（`mcp_client.guess_image`）。
+
+实测样例：6 城 48 家门店扫描，识别出 **海绵宝宝×航海王系列玩具**（覆盖 15 家门店 / 4 座城市）与**随机玩具**（成都 4 家门店）。
+
+---
+
+## 快速开始
+
+### 1. 准备 MCP Token
+
+在 [麦当劳 MCP 开放平台](https://open.mcd.cn/mcp) 登录（手机号 + 短信验证码）→ 右上角【控制台】→【激活】→ 同意协议 → 复制 Token。
+
+```bash
+export MCD_MCP_TOKEN="你的Token"          # macOS / Linux
+setx MCD_MCP_TOKEN "你的Token"            # Windows（新开终端生效）
+```
+
+> 也支持 `MCD_MCP_TOKEN_FILE=/path/to/token.txt`。若不设环境变量，脚本会回退读取 `~/.workbuddy/mcp.json` 中 `mcd-mcp` 的配置（仅本机开发方便）。
+
+### 2. 构建玩具库
+
+```bash
+python scripts/catalog.py
+```
+
+输出 `data/toys.json`：当前在售款 + 历史款 + 积分兑换款 + 相关活动。
+
+### 3. 生成电子收藏册
+
+```bash
+python scripts/build_web.py
+```
+
+双击打开 `web/index.html` 即可查看、点击点亮（状态保存在浏览器 localStorage）。
+
+### 4. 点亮 / 查看进度
+
+```bash
+python scripts/collection.py list                       # 列出全部玩具与点亮状态
+python scripts/collection.py collect 521991 --store "麦当劳深圳方大城餐厅"
+python scripts/collection.py uncollect 521991
+python scripts/collection.py stats                      # 进度统计
+python scripts/collection.py sync                       # 重新扫描并更新收藏册
+```
+
+### 5. 找玩具（跨城门店扫描）
+
+```bash
+python scripts/scan_toys.py --per-city 8                     # 默认 6 城，每城最多 8 家门店
+python scripts/scan_toys.py --cities 深圳市,广州市 --per-city 12
+python scripts/scan_toys.py --stores 1420544,1420207         # 指定门店精准比对
+```
+
+链路：`query-nearby-stores`(城市+行政区关键词) → `query-meals`(筛"开心乐园"分类) → `query-meal-detail`(套餐 rounds 提取玩具轮次) → 图床校验。
+输出 `data/availability.json`（玩具 × 门店可得性矩阵），`web/index.html` 的「找玩具」页直接读取该文件。
+
+> 门店检索关键参数：`searchType=2` 时 **city 与 keyword 必须同时传**，
+> 只传其一返回 `600058 城市名或者关键词不能为空`；`searchType=1` 仅返回账号收藏门店。
+
+---
+
+## 目录结构
+
+```
+mcd-toy-collection/
+├── README.md                 本文件
+├── CONTEST_DECLARATION.md    参赛声明（官方原文，未改动）
+├── MCP_INTEGRATION.md        MCP 调用说明与业务价值
+├── SKILL.md                  WorkBuddy Skill 定义
+├── workbuddy.md              使用 WorkBuddy 开发的对话上下文
+├── mcp-config.example.json   脱敏 MCP 配置示例（仅占位符，符合参赛要求）
+├── .env.example              Token 占位示例（不含真实凭证）
+├── scripts/
+│   ├── mcp_client.py         MCP 调用封装（Streamable HTTP + 业务状态解析 + 图床校验）
+│   ├── catalog.py            构建玩具总库（当前/历史/商城/活动）
+│   ├── scan_toys.py          跨城门店扫描 → 玩具可得性矩阵
+│   ├── collection.py         收藏册 CLI（点亮/取消/统计/同步）
+│   ├── build_web.py          生成 web/index.html
+│   └── probe_stores.py       探测门店类工具的入参 schema（调试用）
+├── docs/
+│   └── architecture.svg      数据流架构图
+├── data/
+│   ├── toys.json             玩具总库（当前/历史/积分周边/活动，含官方图 URL）
+│   ├── availability.json     跨城门店可得性（玩具 × 门店矩阵）
+│   └── collection.json       点亮记录
+└── web/
+    └── index.html            单文件站点：热门精选 / 电子收藏册 / 找玩具
+```
+
+零第三方依赖，只用 Python 标准库（3.9+）。
+
+---
+
+## 目标用户
+
+- 收集开心乐园餐玩具的麦当劳会员 / 亲子家庭
+- 想快速知道「今天这家店送哪款玩具」再决定去哪家店的消费者
+- 想了解麦当劳 MCP 能力边界、寻找 Skill 创意的开发者
+
+---
+
+## 已知限制（诚实说明）
+
+1. **门店营业时间影响扫描覆盖率**：非营业时段 `query-meals` 返回 `600057 门店可能已关闭或不在营业时间`，此部分门店标记为「不可点餐」。首次实测（23:00 后）48 家门店中 17 家可点餐；白天重跑覆盖率显著提高。
+2. **城市关键词召回有限**：`query-nearby-stores` 单次最多返回约 5 家门店，脚本用多个行政区关键词去重扩充；仍是抽样，不是全国全量。
+3. **玩具配送基本全国统一**：本次扫描仅识别出 1 款主当期玩具（海绵宝宝×航海王系列，15 家门店）+ 1 款补充款（成都随机玩具），跨店差异小，"找玩具"的实际价值主要体现在按距离找具体门店。
+4. 数据仅供参考，餐品、价格、赠品供应状态以麦当劳官方渠道实时结果为准。
+
+---
+
+## 参赛信息
+
+麦当劳程序员创意开发大赛参赛作品。非麦当劳官方产品。
+
+### 报名前自检（依据官方《活动规则》）
+
+| 要求 | 状态 |
+|---|---|
+| 仓库 Public 且创建于 2025-12-25 ~ 2026-10-25 | 待确认（创建时间需 ≤ 2026-10-25 23:59） |
+| `README.md`（项目介绍、安装方法、使用示例、目标用户） | ✅ |
+| `CONTEST_DECLARATION.md`（官方原文，文件名内容均不可改） | ✅ |
+| `MCP_INTEGRATION.md`（MCP Server / Tool / 调用流程 / 业务价值） | ✅ |
+| `mcp-config.example.json`（脱敏 MCP 配置，仅占位符） | ✅ |
+| `workbuddy.md`（WorkBuddy 对话上下文，专项奖励必需） | ✅ |
+| 真实调用麦当劳 MCP | ✅ 全程只读，见脚本 |
+| 在活动仓库按模板提交报名 Issue（10-25 23:59 前） | ⬜ 待办 |
+
+排名依据：**GitHub 公开 Star 数**（Star=0 不进榜），前 100 名进获奖范围；最终定榜时间 2026-10-26 00:00。
