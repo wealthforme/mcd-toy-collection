@@ -2,7 +2,12 @@
 """生成单文件玩具站 web/index.html（热门精选 / 电子收藏册 / 找玩具）。
 
 数据来源：data/toys.json（总库）+ data/availability.json（跨城门店可得性）
+        + data/collection.json（点亮状态，单品级）
 两张表都由 scripts/*.py 通过麦当劳 MCP Server 只读接口拉取，不写死任何业务数据。
+
+点亮模型：开心乐园餐赠品是"一整套系列里的随机一个"，所以
+  - 系列款（isSeries）展开成 lineupCount 个单品槽位，逐款点亮；
+  - 非系列单品（积分周边等）整体点亮。
 """
 import json, pathlib, html
 
@@ -15,11 +20,33 @@ toys_doc = json.loads((DATA / "toys.json").read_text(encoding="utf-8"))
 avail_doc = json.loads((DATA / "availability.json").read_text(encoding="utf-8")) \
     if (DATA / "availability.json").exists() else {}
 coll_doc = json.loads((DATA / "collection.json").read_text(encoding="utf-8")) \
-    if (DATA / "collection.json").exists() else {"collected": {}}
+    if (DATA / "collection.json").exists() else {"version": 2, "slots": {}, "single": {}}
+if coll_doc.get("version") != 2:  # 兼容 v1：旧记录视为系列第 1 款
+    coll_doc = {"version": 2,
+                "slots": {str(c): [{"slot": 1, "name": (i or {}).get("note", ""), "got": True,
+                                    "at": (i or {}).get("at", ""), "store": (i or {}).get("store", "")}]
+                          for c, i in (coll_doc.get("collected") or {}).items()},
+                "single": {}}
 
 ALL = toys_doc.get("toys", [])
+SLOTS = coll_doc.get("slots") or {}
+SINGLE = coll_doc.get("single") or {}
+# 按官方系列图点数预置单品槽位（未命名），保证一整套都能在册、逐款点亮
+_padded = False
+for _t in ALL:
+    if not _t.get("isSeries"):
+        continue
+    _arr = SLOTS.setdefault(str(_t["code"]), [])
+    while len(_arr) < int(_t.get("lineupCount") or 0):
+        _arr.append({"slot": len(_arr) + 1, "name": "", "got": False, "at": "", "store": ""})
+        _padded = True
+if _padded:  # 回写，保证 CLI 与页面看到同一份槽位
+    coll_doc["slots"] = SLOTS
+    (DATA / "collection.json").write_text(
+        json.dumps(coll_doc, ensure_ascii=False, indent=1), encoding="utf-8")
 # 门店可用性按玩具 code 汇总，供前端展示"哪些店有"（键统一转 str，防类型漂移）
 AVAIL_BY_TOY = {str(t["code"]): t for t in avail_doc.get("toys", [])}
+INIT_JSON = json.dumps({"slots": SLOTS, "single": SINGLE}, ensure_ascii=False).replace("</", "<\\/")
 
 
 def meta_line(t):
@@ -47,25 +74,66 @@ def meta_line(t):
     return " · ".join(bits)
 
 
-def card(t):
+def avail_badge(t):
+    av = AVAIL_BY_TOY.get(str(t["code"]), {})
+    n = len(av.get("stores") or [])
+    return f'<span class="badge b-avail">{n} 家门店在送</span>' if n else ""
+
+
+def img_of(t):
+    return t.get("image") or ""
+
+
+# ---------- 单品卡（积分周边等非系列款） ----------
+def single_card(t):
     code = str(t["code"])
-    got = code in coll_doc["collected"]
-    info = coll_doc["collected"].get(code, {})
-    img = t.get("image") or ""
-    avail = AVAIL_BY_TOY.get(code, {})
-    n_store = len(avail.get("stores") or [])
-    badge = f'<span class="badge b-avail">{n_store} 家门店在送</span>' if n_store else ""
-    return f'''<div class="toy{' got' if got else ''}" data-code="{E(code)}" data-src="{E(t.get('source',''))}" data-name="{E(t.get('name',''))}">
-  <div class="imgbox"><img loading="lazy" src="{E(img)}" alt="{E(t.get('name',''))}"></div>
+    got = bool(SINGLE.get(code, {}).get("got"))
+    return f'''<div class="toy single{' got' if got else ''}" data-code="{E(code)}" data-src="{E(t.get('source',''))}" data-name="{E(t.get('name',''))}">
+  <div class="imgbox"><img loading="lazy" src="{E(img_of(t))}" alt="{E(t.get('name',''))}"></div>
   <div class="info">
     <h4>{E(t.get('name',''))}</h4>
     <p class="meta">{E(meta_line(t))}</p>
-    <p class="code">code {E(code)}{badge}</p>
+    <p class="code">code {E(code)}{avail_badge(t)}</p>
   </div>
   <button class="btn">{'★ 已点亮' if got else '☆ 点亮'}</button>
   <div class="stamp">{'已收集' if got else '未点亮'}</div>
-  {('<div class="at">'+E(str(info.get("at","")))+'</div>') if got and info.get("at") else ''}
 </div>'''
+
+
+# ---------- 系列卡（展开成单品槽位） ----------
+def series_card(t):
+    code = str(t["code"])
+    slots = SLOTS.get(code) or []
+    lineup = int(t.get("lineupCount") or 0)
+    total = max(lineup, len(slots))
+    got = sum(1 for s in slots if s.get("got"))
+    chips = []
+    for s in slots:
+        nm = (s.get("name") or "").strip() or f"单品{s['slot']}"
+        chips.append(
+            f'<span class="chip{" got" if s.get("got") else ""}" data-slot="{s["slot"]}">'
+            f'<i class="nm">{"★ " if s.get("got") else ""}{E(nm)}</i><b class="pen" title="给这款起名">✎</b></span>')
+    chips.append('<span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span>')
+    if total:
+        head = f'一套 {total} 款 · 已收集 <b class="lu-got">{got}</b>/<span class="lu-total">{total}</span>'
+    else:
+        head = f'随机款 · 已记录 <b class="lu-got">{got}</b> 款（点 ＋ 添加拿到的款）'
+    return f'''<div class="toy series{' got' if got else ''}" data-code="{E(code)}" data-src="{E(t.get('source',''))}" data-name="{E(t.get('name',''))}" data-lineup="{lineup}" data-got="{got}">
+  <div class="imgbox"><img loading="lazy" src="{E(img_of(t))}" alt="{E(t.get('name',''))}"></div>
+  <div class="info">
+    <h4>{E(t.get('name',''))}</h4>
+    <p class="meta">{E(meta_line(t))}</p>
+    <p class="code">code {E(code)}{avail_badge(t)}</p>
+  </div>
+  <div class="lineup">
+    <div class="lu-head">{head}</div>
+    <div class="chips">{''.join(chips)}</div>
+  </div>
+</div>'''
+
+
+def card(t):
+    return series_card(t) if t.get("isSeries") else single_card(t)
 
 
 def grid(items):
@@ -76,6 +144,22 @@ def grid(items):
 cur = [t for t in ALL if t["source"] == "current"]
 his = [t for t in ALL if t["source"] == "history"]
 mal = [t for t in ALL if t["source"] == "mall"]
+
+# ---------- 收藏进度（单品级） ----------
+def toy_total(t):
+    if t.get("isSeries"):
+        return max(int(t.get("lineupCount") or 0), len(SLOTS.get(str(t["code"])) or []))
+    return 1
+
+
+def toy_got(t):
+    if t.get("isSeries"):
+        return sum(1 for s in (SLOTS.get(str(t["code"])) or []) if s.get("got"))
+    return 1 if SINGLE.get(str(t["code"]), {}).get("got") else 0
+
+
+total = sum(toy_total(t) for t in ALL)
+got = sum(toy_got(t) for t in ALL)
 
 hot = None
 if cur:
@@ -98,6 +182,7 @@ if hot:
       <span class="tag2">code {E(str(hot.get('code')))}</span>
       {'<span class="tag2">' + E(str(hot.get('round',''))) + '</span>' if hot.get('round') else ''}
       {'<span class="tag2">差价 ' + E(str(hot.get('diffPrice'))) + '</span>' if hot.get('diffPrice') else ''}
+      {'<span class="tag2">一套 ' + E(str(hot.get('lineupCount') or 0)) + ' 款随机</span>' if hot.get('isSeries') else ''}
     </div>
     <p class="hint">数据源：<code>query-meal-detail</code> 的选配轮次 + <code>query-nearby-stores</code> 跨城门店校验</p>
   </div>
@@ -132,14 +217,12 @@ scan = {"at": avail_doc.get("scannedAt", ""), "cities": avail_doc.get("cityCount
         "stores": avail_doc.get("storeCount", 0), "open": avail_doc.get("openStoreCount", 0),
         "toys": avail_doc.get("toyCount", 0)}
 
-total = len(ALL)
-got = len(coll_doc["collected"])
-
 HTML = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>开心乐园餐 · 玩具收藏与找玩具</title>
-<style>:root{{--bg:#fff9ec;--panel:#fff;--line:#ecdfc0;--text:#241a06;--muted:#8a7a55;--red:#DA291C;--yellow:#FFC72C;--gold:#e8b923}}
+<style>
+:root{{--bg:#fff9ec;--panel:#fff;--line:#ecdfc0;--text:#241a06;--muted:#8a7a55;--red:#DA291C;--yellow:#FFC72C;--gold:#e8b923}}
 *{{box-sizing:border-box}}
 body{{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 "PingFang SC","Microsoft YaHei",sans-serif}}
 .wrap{{max-width:1180px;margin:0 auto;padding:24px 20px 70px}}
@@ -171,11 +254,12 @@ section{{margin:24px 0}}
 h2{{font-size:18px;margin:0 0 10px;display:flex;align-items:center;gap:8px}}
 h2::before{{content:"";width:4px;height:16px;background:var(--red);border-radius:2px}}
 h2 .cnt{{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12px;padding:1px 8px;font-weight:400}}
+.desc{{font-size:12.5px;color:var(--muted);margin:0 0 10px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}}
 .grp{{margin-top:18px}}
 .grp h3{{font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:8px}}
 .grp h3 .cnt{{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:11.5px;padding:1px 8px;font-weight:400}}
-.desc{{font-size:12.5px;color:var(--muted);margin:0 0 10px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}}
+/* ---- 单品卡 ---- */
 .toy{{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;position:relative;display:flex;flex-direction:column;gap:8px;transition:.18s}}
 .toy .imgbox{{background:#fff;border-radius:10px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden}}
 .toy img{{max-width:100%;max-height:100%;object-fit:contain;filter:grayscale(1) opacity(.5)}}
@@ -190,7 +274,21 @@ h2 .cnt{{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12p
 .toy.got .btn{{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}}
 .stamp{{position:absolute;top:8px;right:8px;font-size:11px;background:#f1f2f4;color:#8a8a8a;border-radius:5px;padding:1px 7px}}
 .toy.got .stamp{{background:var(--gold);color:#3d2c00}}
-.at{{font-size:11px;color:var(--muted);text-align:right}}
+/* ---- 系列卡：单品槽位 ---- */
+.toy.series{{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:14px}}
+.toy.series .imgbox{{width:150px;height:150px;flex:none}}
+.toy.series .info{{flex:1;min-width:200px}}
+.lineup{{flex:1 1 100%;border-top:1px dashed var(--line);padding-top:10px}}
+.lu-head{{font-size:12.5px;color:#6b5a33;margin-bottom:8px}}
+.lu-head b{{color:var(--red)}}
+.chips{{display:flex;flex-wrap:wrap;gap:7px}}
+.chip{{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:999px;padding:4px 10px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}}
+.chip:hover{{border-color:var(--gold)}}
+.chip.got{{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}}
+.chip .pen{{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px}}
+.chip .pen:hover{{opacity:1;background:rgba(0,0,0,.08)}}
+.chip.add{{background:#fff;border-style:dashed;color:#b3a483;font-weight:700}}
+.chip input{{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:96px;font-family:inherit}}
 .filters{{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}}
 .filters input,.filters select{{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--text)}}
 .tagwrap{{display:flex;gap:6px;flex-wrap:wrap}}
@@ -215,7 +313,7 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
 <input type="radio" name="tab" id="t-find" class="tb">
 <header class="top">
   <h1>开心乐园餐 · 玩具收藏与找玩具</h1>
-  <p>全部数据来自麦当劳 MCP Server 只读接口 · 玩具图片取自官方图床</p>
+  <p>全部数据来自麦当劳 MCP Server 只读接口 · 玩具图片取自官方图床 · 每份乐园餐含随机玩具 1 个，按单品点亮</p>
   <div class="bar"><i></i></div>
   <div class="pline">
     <span>收藏进度 <b id="got">{got}</b> / {total}</span>
@@ -241,7 +339,7 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
   </section>
   <section>
     <h2>积分兑换周边<span class="cnt">{len(mal)}</span></h2>
-    <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目）</p>
+    <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目），点击卡片可整体点亮</p>
     {mall_html}
   </section>
 </div>
@@ -249,10 +347,10 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
 <div class="page" id="p-coll">
   <section style="margin-top:0">
     <h2>收藏册<span class="cnt">{total}</span></h2>
-    <p class="desc">买到对应玩具就点亮它，状态保存在本机 localStorage；输入关键词可筛选。
-      历史款是你真实订单里拿到过的玩具（卡片上标注了下单日期），积分周边来自麦麦商城兑换。</p>
+    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：点芯片点亮/取消，点 <b>✎</b> 给这款起名，
+      点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
     <div class="filters">
-      <input id="q" placeholder="搜索玩具名称 / code" autocomplete="off">
+      <input id="q" placeholder="搜索玩具名称 / 单品名 / code" autocomplete="off">
       <select id="f">
         <option value="">全部分类</option>
         <option value="current">当前在售 {len(cur)}</option>
@@ -261,8 +359,9 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
       </select>
       <select id="g">
         <option value="">全部状态</option>
-        <option value="got">已点亮</option>
-        <option value="todo">未点亮</option>
+        <option value="started">已有收集</option>
+        <option value="todo">尚未开始</option>
+        <option value="done">已收集齐</option>
       </select>
       <button class="btn" id="export">导出我的收藏</button>
     </div>
@@ -306,7 +405,8 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
     <code>python scripts/scan_toys.py --per-city 8</code>　跨 6 城采样门店并写入 <code>data/availability.json</code><br>
     <code>python scripts/scan_toys.py --cities 深圳市,广州市 --per-city 12</code>　指定城市与门店密度<br>
     <code>python scripts/catalog.py</code>　重建玩具总库（当前款 / 历史订单 / 积分周边 / 活动）<br>
-    <code>python scripts/collection.py collect 521991 --store 1420544</code>　命令行点亮玩具（写回 <code>data/collection.json</code>）<br>
+    <code>python scripts/collection.py collect 521991 --slot 3 --name "路飞"</code>　命令行点亮系列内第 3 款<br>
+    <code>python scripts/collection.py add 7001 --name "抽到的某款"</code>　给随机玩具追加一款记录<br>
     门店检索注意：<code>query-nearby-stores</code> 的 <code>searchType=2</code> 必须 <b>city 与 keyword 同时传</b>，
     只传其一会报 <code>600058</code>。
   </div>
@@ -326,38 +426,157 @@ function saveState(s){{
   mem=s;
   try{{localStorage.setItem(KEY,JSON.stringify(s));}}catch(e){{}}
 }}
+/* 初始状态来自服务端渲染的 data/collection.json（单品级），localStorage 优先 */
+var INIT={INIT_JSON};
 var got=loadState();
+if(!got||!got.slots){{got=JSON.parse(JSON.stringify(INIT));}}
 var root=document.body;
-function paint(el,on){{
+function slotsOf(c){{return (got.slots[String(c)]=got.slots[String(c)]||[]);}}
+function lineupTotal(card){{
+  var lu=parseInt(card.getAttribute('data-lineup')||'0',10)||0;
+  return Math.max(lu,slotsOf(card.dataset.code).length);
+}}
+function paintSingle(el,on){{
   el.classList.toggle('got',on);
   var b=el.querySelector('.btn'); if(b) b.textContent=on?'★ 已点亮':'☆ 点亮';
   var st=el.querySelector('.stamp'); if(st) st.textContent=on?'已收集':'未点亮';
 }}
 /* 同一款玩具可能在多个分区出现（如积分周边同时出现在热门精选与收藏册），点亮时同步全部副本 */
 function paintAll(c,on){{
-  root.querySelectorAll('.toy[data-code="'+c+'"]').forEach(function(el){{paint(el,on);}});
+  root.querySelectorAll('.toy[data-code="'+c+'"]').forEach(function(el){{paintSingle(el,on);}});
 }}
-root.querySelectorAll('.toy').forEach(function(el){{
-  if(got[el.dataset.code]) paint(el,true);
-}});
+function refreshCard(card){{
+  var c=card.dataset.code, arr=slotsOf(c);
+  var n=0; arr.forEach(function(s){{if(s.got)n++;}});
+  var g=card.querySelector('.lu-got'); if(g) g.textContent=n;
+  var t=card.querySelector('.lu-total'); if(t) t.textContent=lineupTotal(card);
+  card.classList.toggle('got',n>0);
+  card.setAttribute('data-got',n);
+}}
+function countGot(){{
+  var n=0;
+  root.querySelectorAll('.toy.series').forEach(function(card){{
+    slotsOf(card.dataset.code).forEach(function(s){{if(s.got)n++;}});
+  }});
+  root.querySelectorAll('.toy.single').forEach(function(card){{
+    if(got.single&&got.single[card.dataset.code]&&got.single[card.dataset.code].got)n++;
+  }});
+  return n;
+}}
+function countTotal(){{
+  var n=0;
+  root.querySelectorAll('.toy.series').forEach(function(card){{n+=lineupTotal(card);}});
+  n+=root.querySelectorAll('.toy.single').length;
+  return n;
+}}
+function syncCount(){{
+  var cnt=document.getElementById('got'); if(cnt) cnt.textContent=String(countGot())+'/'+String(countTotal());
+}}
+function refreshAll(){{
+  root.querySelectorAll('.toy.series').forEach(refreshCard);
+  Object.keys(got.single||{{}}).forEach(function(c){{
+    if(got.single[c].got) paintAll(c,true);
+  }});
+  syncCount();
+}}
+/* ---- 点击：单品芯片 / 起名 / 添加 / 单品整体点亮 ---- */
 root.addEventListener('click',function(ev){{
   var t=ev.target;
   if(!(t instanceof Element)) return;
-  var b=t.closest('.toy .btn'); if(!b) return;
-  var el=b.closest('.toy'), c=el.dataset.code;
-  if(got[c]){{delete got[c];paintAll(c,false);}}
-  else{{got[c]={{at:new Date().toISOString().slice(0,10)}};paintAll(c,true);}}
-  saveState(got);
-  var cnt=document.getElementById('got'); if(cnt) cnt.textContent=Object.keys(got).length;
-  applyFilter();
+  var pen=t.closest('.chip .pen');
+  if(pen){{ startRename(pen.parentNode); return; }}
+  var add=t.closest('.chip.add');
+  if(add){{ addSlot(add.closest('.toy')); return; }}
+  var chip=t.closest('.chip');
+  if(chip&&chip.closest('.toy.series')){{
+    var card=chip.closest('.toy'), c=card.dataset.code, slot=parseInt(chip.dataset.slot,10);
+    var arr=slotsOf(c), s=null;
+    for(var i=0;i<arr.length;i++) if(arr[i].slot===slot) s=arr[i];
+    if(!s){{s={{slot:slot,name:'',got:false,at:'',store:''}};arr.push(s);}}
+    s.got=!s.got;
+    if(s.got) s.at=new Date().toISOString().slice(0,10); else s.at='';
+    paintChip(chip,s);
+    refreshCard(card);
+    saveState(got); syncCount(); applyFilter();
+    return;
+  }}
+  var b=t.closest('.toy.single .btn');
+  if(b){{
+    var el=b.closest('.toy'), code=el.dataset.code;
+    var on=!(got.single&&got.single[code]&&got.single[code].got);
+    got.single=got.single||{{}};
+    if(on) got.single[code]={{got:true,at:new Date().toISOString().slice(0,10),store:''}};
+    else delete got.single[code];
+    paintAll(code,on);
+    saveState(got); syncCount(); applyFilter();
+  }}
 }});
+function paintChip(chip,s){{
+  chip.classList.toggle('got',!!s.got);
+  var nm=(s.name||'').trim()||('单品'+s.slot);
+  chip.querySelector('.nm').textContent=(s.got?'★ ':'')+nm;
+}}
+/* ---- 起名（行内编辑） ---- */
+function startRename(chip){{
+  if(chip.querySelector('input')) return;
+  var s=null,arr=slotsOf(chip.closest('.toy').dataset.code),slot=parseInt(chip.dataset.slot,10);
+  for(var i=0;i<arr.length;i++) if(arr[i].slot===slot) s=arr[i];
+  var old=s&&s.name?s.name:'';
+  var nm=chip.querySelector('.nm');
+  var inp=document.createElement('input');
+  inp.value=old; inp.placeholder='这款叫什么？';
+  var closed=false;
+  /* 提交不依赖 blur：Enter 直接落库，避免 input 未获焦时 blur 不触发导致改名丢失 */
+  function commit(){{
+    if(closed) return; closed=true;
+    var v=inp.value.trim();
+    if(s){{ s.name=v; }}
+    else if(v){{ s={{slot:slot,name:v,got:chip.classList.contains('got'),at:'',store:''}}; arr.push(s); }}
+    inp.remove(); nm.style.display='';
+    paintChip(chip,{{slot:slot,name:(s&&s.name)||'',got:chip.classList.contains('got')}});
+    saveState(got);
+  }}
+  nm.style.display='none';
+  chip.appendChild(inp);
+  try{{inp.focus(); inp.select();}}catch(e){{}}
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',function(e){{
+    if(e.key==='Enter'){{e.preventDefault(); commit();}}
+    else if(e.key==='Escape'){{inp.value=old; commit();}}
+  }});
+  inp.addEventListener('click',function(e){{e.stopPropagation();}});
+}}
+/* ---- 追加一款（随机玩具 / 超出预置款数） ---- */
+function addSlot(card){{
+  if(!card) return;
+  var c=card.dataset.code, arr=slotsOf(c);
+  var s={{slot:arr.length+1,name:'',got:false,at:'',store:''}};
+  arr.push(s);
+  var chip=document.createElement('span');
+  chip.className='chip'; chip.dataset.slot=String(s.slot);
+  chip.innerHTML='<i class="nm">'+s.slot+'</i><b class="pen" title="给这款起名">✎</b>';
+  card.querySelector('.chips').insertBefore(chip,card.querySelector('.chip.add'));
+  refreshCard(card); saveState(got); syncCount();
+  startRename(chip);
+}}
+/* ---- 筛选 ---- */
 var q=document.getElementById('q'),f=document.getElementById('f'),g=document.getElementById('g');
+function cardState(card){{
+  if(card.classList.contains('series')){{
+    var n=parseInt(card.getAttribute('data-got')||'0',10);
+    var t=lineupTotal(card);
+    return n===0?'todo':(n>=t?'done':'started');
+  }}
+  return card.classList.contains('got')?'done':'todo';
+}}
 function applyFilter(){{
   var kw=(q.value||'').trim().toLowerCase();
   root.querySelectorAll('.toy').forEach(function(el){{
-    var okKw=!kw||(el.dataset.name+' '+el.dataset.code).toLowerCase().indexOf(kw)>=0;
+    var text=(el.dataset.name+' '+el.dataset.code+' '+el.textContent).toLowerCase();
+    var okKw=!kw||text.indexOf(kw)>=0;
     var okF=!f.value||el.dataset.src===f.value;
-    var okG=!g.value||(g.value==='got'?!!got[el.dataset.code]:!got[el.dataset.code]);
+    var st=cardState(el);
+    var okG=!g.value||(g.value==='started'?st!=='todo':(g.value==='todo'?st==='todo':st==='done'));
     el.style.display=(okKw&&okF&&okG)?'':'none';
   }});
   root.querySelectorAll('.grp').forEach(function(grp){{
@@ -368,13 +587,21 @@ function applyFilter(){{
 }}
 [q,f,g].forEach(function(x){{x.addEventListener('input',applyFilter);}});
 document.getElementById('export').addEventListener('click',function(){{
-  var rows=Object.keys(got).map(function(c){{
-    var el=root.querySelector('.toy[data-code="'+c+'"]');
-    return [c,(el?el.dataset.name:''),got[c].at].join(',');
+  var rows=[['kind','code','name','slot','name_of_toy','at']];
+  root.querySelectorAll('.toy.series').forEach(function(card){{
+    slotsOf(card.dataset.code).forEach(function(s){{
+      rows.push(['series',card.dataset.code,card.dataset.name,s.slot,(s.name||'').replace(/,/g,'，'),s.at||'']);
+    }});
   }});
-  var blob=new Blob([['code','name','at'].join(',')].concat(rows).join('\\n'),{{type:'text/csv'}});
+  root.querySelectorAll('.toy.single').forEach(function(card){{
+    var on=got.single&&got.single[card.dataset.code]&&got.single[card.dataset.code].got;
+    rows.push(['single',card.dataset.code,card.dataset.name,'','',on?(got.single[card.dataset.code].at||''):'']);
+  }});
+  var csv=rows.map(function(r){{return r.join(',');}}).join('\\n');
+  var blob=new Blob([csv],{{type:'text/csv'}});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_toys.csv';a.click();
 }});
+/* ---- 门店筛选 ---- */
 var sq=document.getElementById('sq'),sc=document.getElementById('sc'),so=document.getElementById('so');
 function filterStores(){{
   var kw=(sq.value||'').trim().toLowerCase();
@@ -386,10 +613,11 @@ function filterStores(){{
   }});
 }}
 if(sq)[sq,sc,so].forEach(function(x){{x.addEventListener('input',filterStores);}});
+refreshAll();
 </script>
 </body></html>"""
 
 WEB.mkdir(parents=True, exist_ok=True)
 out = WEB / "index.html"
 out.write_text(HTML, encoding="utf-8")
-print("written", out, len(HTML), "bytes | toys", total, "| stores", len(stores))
+print("written", out, len(HTML), "bytes | toys", len(ALL), "| slots", got, "/", total, "| stores", len(stores))

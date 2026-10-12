@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-12 17:29:39",
+ "generatedAt": "2026-10-12 18:21:27",
  "store": {
   "storeCode": "1420544",
   "storeName": "麦当劳深圳方大城餐厅",
@@ -22,6 +22,8 @@
    "storeName": "麦当劳深圳方大城餐厅",
    "storeCode": "1420544",
    "availableStores": 15,
+   "isSeries": true,
+   "lineupCount": 10,
    "imageIsPlaceholder": false
   },
   {
@@ -35,6 +37,8 @@
    "orderId": "1030147390000807480452609120",
    "orderTime": "2026-09-05 12:43:48",
    "availableStores": 4,
+   "isSeries": true,
+   "lineupCount": 0,
    "imageIsPlaceholder": false
   },
   {
@@ -47,6 +51,8 @@
    "series": "樱桃小丸子",
    "orderId": "1030323460000629513017437187",
    "orderTime": "2026-01-24 12:58:11",
+   "isSeries": true,
+   "lineupCount": 6,
    "imageIsPlaceholder": false
   },
   {
@@ -59,6 +65,8 @@
    "series": "小马宝莉&变形金刚",
    "orderId": "1030279620000549989638484279",
    "orderTime": "2026-02-07 12:25:06",
+   "isSeries": true,
+   "lineupCount": 6,
    "imageIsPlaceholder": false
   },
   {
@@ -76,6 +84,8 @@
    "selling": "独一无二，梦幻联动，Nike Book 2 麦当劳特别联名款 每人限购一双，每日 14:00 准时开抢",
    "upTime": "2026-06-05 14:00:00",
    "downTime": "2026-06-05 16:00:00",
+   "isSeries": false,
+   "lineupCount": 0,
    "imageIsPlaceholder": false
   },
   {
@@ -93,6 +103,8 @@
    "selling": "800 积分兑换酸黄瓜吧唧礼盒！ 8.12 限量 150 份｜8.13 限量 100 份｜8.14 限量 100 份，先兑先得",
    "upTime": "2026-08-14 14:00:00",
    "downTime": "2026-08-14 23:59:59",
+   "isSeries": false,
+   "lineupCount": 0,
    "imageIsPlaceholder": false
   },
   {
@@ -110,6 +122,8 @@
    "selling": "积分兑大礼，罗技键鼠套装6666积分兑换！8月17日-8月21日，每日限量 5 份，先到先得",
    "upTime": "2026-08-21 14:00:00",
    "downTime": "2026-08-21 23:59:59",
+   "isSeries": false,
+   "lineupCount": 0,
    "imageIsPlaceholder": false
   }
  ],

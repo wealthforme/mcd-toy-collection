@@ -50,7 +50,7 @@
 
 1. **官方接口未显式暴露的能力**：`query-meal-detail` 文档只写「查看套餐包含内容以及可以替换选项」，实际其 `rounds[]` 里带着**当前赠品玩具**的名称与 code——这是「今天送哪款玩具」的权威来源，比任何第三方攻略都准确。
 2. **玩具图片可程序化获取**：把玩具 `code` 当餐品 code 再调一次 `query-meal-detail`，即可拿到 `menu-img.mcd.cn` 上的官方玩具图。
-3. **收藏闭环**：`order-list` 能回溯历史玩具，`mall-points-products` 补充积分兑换款，两者与「当前在售」合并，构成有时间纵深的收藏册。
+3. **收藏闭环**：`order-list` 能回溯历史玩具，`mall-points-products` 补充积分兑换款，两者与「当前在售」合并，构成有时间纵深的收藏册。点亮单位是**系列内单品**（每份乐园餐含随机玩具 1 个），系列卡展开成 6~10 个单品槽位逐款点亮，进度按单品累计。
 
 ## 实战踩坑（对开发者最有价值的部分）
 
@@ -68,7 +68,9 @@
 | 10 | 非营业时段门店查不到菜单 | `query-meals` 返回 `600057 门店可能已关闭或不在营业时间`，扫描脚本需单独标记并跳过 |
 | 11 | 历史玩具官方图拿不到 | 按图床规则 `ProductPool/product/MS_<code>_600.png` HEAD 校验补全，下市商品同样可用 |
 | 12 | 商城周边只看 `catName=玩具` 会漏联名款 | Nike Book 2 麦当劳特别联名款 `catName` 是「鞋袜」，需按名称含「联名」补充收录 |
-| 13 | 前端首行读写 localStorage 会整体挂掉 | 预览面板沙箱 iframe / 隐私模式下抛 `SecurityError`，整个脚本初始化即死；页签切换应改纯 CSS（`radio + :checked`），存储读写统一 try/catch 兜底 |
+| 13 | 系列内单品拿不到 | `query-meal-detail` 只把整个系列作为一个选配项返回（试过玩具 code 直查、`mall-product-detail`、菜单搜索均无单品）；一套几款只能按官方系列图 `MS_<code>_600.png` 点数，单品名由用户自填 |
+| 14 | 前端首行读写 localStorage 会整体挂掉 | 预览面板沙箱 iframe / 隐私模式下抛 `SecurityError`，整个脚本初始化即死；页签切换应改纯 CSS（`radio + :checked`），存储读写统一 try/catch 兜底 |
+| 15 | 行内编辑依赖 blur 会丢输入 | input 未获焦时 `blur()` 不触发事件，Enter 必须直接提交，不能转手 blur |
 
 ## 凭证安全
 

@@ -14,14 +14,27 @@
 
 | 功能 | 说明 | 数据来源 |
 |---|---|---|
-| 🎯 **当前热送** | 当期联名玩具大卡（官方图 + 选配轮次 + 实测覆盖门店/城市数） | `query-meal-detail` + 跨城 `availability.json` |
-| 📖 **电子收藏册** | 按「当前在送 / 历史款 / 积分周边」三组呈现，点击点亮/取消，进度条、搜索、分类筛选、导出 CSV | `data/toys.json` + `data/collection.json` |
+| 🎯 **当前热送** | 当期联名玩具大卡（官方图 + 选配轮次 + 实测覆盖门店/城市数 + 一套几款） | `query-meal-detail` + 跨城 `availability.json` |
+| 📖 **电子收藏册** | 按「当前在送 / 历史款 / 积分周边」三组呈现；**系列卡按单品点亮**（点芯片点亮、✎ 起名、＋ 添加），进度条、搜索、分类/状态筛选、导出 CSV | `data/toys.json` + `data/collection.json` |
 | 🔍 **找玩具** | 6 城 48 家门店扫描，列出「哪家店在送哪款」、城市/营业状态筛选 | `scan_toys.py` → `data/availability.json` |
 | 🕓 **历史款** | 从历史订单挖出曾拿到的玩具（标注下单日期），自动入库 | `order-list` + `query-meal-detail` |
 | 🎁 **积分兑换** | 麦麦商城可积分兑换的玩具与联名周边 | `mall-points-products`（`catRuleIds=2>8`） |
 | 📅 **相关活动** | 提到玩具/乐园餐的官方活动 | `campaign-calendar` |
 
-当前玩具库共 **7 款**：当前在送 2（海绵宝宝×航海王系列、随机玩具）、历史订单 2（樱桃小丸子定制玩具、小马宝莉&变形金刚系列）、积分兑换周边 3（酸黄瓜吧唧礼盒、罗技键鼠套装、Nike Book 2 麦当劳特别联名款）。
+当前玩具库共 **7 款 / 25 个可收集单品**：当前在送 2（海绵宝宝×航海王系列一套 10 款、随机玩具）、历史订单 2（樱桃小丸子定制玩具 6 款、小马宝莉&变形金刚系列 6 款）、积分兑换周边 3（酸黄瓜吧唧礼盒、罗技键鼠套装、Nike Book 2 麦当劳特别联名款）。
+
+### 点亮单位是「单品」不是「系列」
+
+每份开心乐园餐含**随机玩具 1 个**（官方系列图原话），拿到的是整套里的一款，所以收藏册按单品点亮：
+
+| 系列 | 一套几款 | 说明 |
+|---|---|---|
+| 海绵宝宝×航海王系列玩具 | 10 | 当期主推，跨城扫描 15 家门店在送 |
+| 樱桃小丸子定制玩具 | 6 | 历史订单获得 |
+| 开心乐园小马宝莉&变形金刚系列玩具 | 6 | 历史订单获得 |
+| 随机玩具1个 | 不定 | 任意系列随机款，拿到哪款点 ＋ 添加哪款 |
+
+系列内单品清单 MCP 不提供（`query-meal-detail` 只把整个系列作为一个选配项返回），单品数按**官方系列图**点数预置，名字由用户自己填（✎）。
 
 **玩具图片**（全部为官方图床真实资源，无占位图）：
 - 在售款：取 `query-meal-detail` 对玩具 code 返回的 `image`；
@@ -65,15 +78,20 @@ python scripts/build_web.py
 
 双击打开 `web/index.html` 即可查看、点击点亮（状态保存在浏览器 localStorage）。
 
-### 4. 点亮 / 查看进度
+### 4. 点亮 / 查看进度（单品级）
 
 ```bash
-python scripts/collection.py list                       # 列出全部玩具与点亮状态
-python scripts/collection.py collect 521991 --store "麦当劳深圳方大城餐厅"
-python scripts/collection.py uncollect 521991
-python scripts/collection.py stats                      # 进度统计
-python scripts/collection.py sync                       # 重新扫描并更新收藏册
+python scripts/collection.py list                                    # 总览：系列进度 + 每款明细
+python scripts/collection.py collect 521991 --slot 4 --name "派大星x乔巴" --store "麦当劳深圳方大城餐厅"
+python scripts/collection.py uncollect 521991 --slot 4               # 取消某一款
+python scripts/collection.py rename  521991 --slot 4 --name "新名字"  # 给某一款起名
+python scripts/collection.py add 7001 --name "抽到的某款"             # 随机玩具追加一款记录
+python scripts/collection.py collect 17643                           # 非系列单品（积分周边）整体点亮
+python scripts/collection.py stats                                   # 进度统计
+python scripts/collection.py sync                                    # 重新扫描并更新收藏册
 ```
+
+网页端同理：系列卡点芯片点亮/取消、点 `✎` 起名、点 `＋` 添加；积分周边卡点按钮整体点亮。
 
 ### 5. 找玩具（跨城门店扫描）
 
@@ -114,7 +132,7 @@ mcd-toy-collection/
 ├── data/
 │   ├── toys.json             玩具总库（当前/历史/积分周边/活动，含官方图 URL）
 │   ├── availability.json     跨城门店可得性（玩具 × 门店矩阵）
-│   └── collection.json       点亮记录
+│   └── collection.json       点亮记录（version 2：slots 系列内单品 + single 非系列单品）
 └── web/
     └── index.html            单文件站点：热门精选 / 电子收藏册 / 找玩具
 ```
@@ -137,7 +155,8 @@ mcd-toy-collection/
 2. **城市关键词召回有限**：`query-nearby-stores` 单次最多返回约 5 家门店，脚本用多个行政区关键词去重扩充；仍是抽样，不是全国全量。
 3. **玩具配送基本全国统一**：本次扫描仅识别出 2 款在送玩具（海绵宝宝×航海王系列 15 家门店 + 成都随机玩具 4 家门店），跨店差异小，"找玩具"的实际价值主要体现在按距离找具体门店。
 4. **收藏册玩具数量取决于账号历史**：历史款来自本账号 `order-list` 的真实订单（当前 4 单中含 3 款玩具），换账号跑会得到不同结果。
-5. 数据仅供参考，餐品、价格、赠品供应状态以麦当劳官方渠道实时结果为准。
+5. **系列内单品清单 MCP 不提供**：`query-meal-detail` 只把整个系列作为一个选配项返回，拿不到"一套里有哪几款、各叫什么"。单品数按官方系列图点数预置（海绵宝宝×航海王 10 款、小马宝莉&变形金刚 6 款、樱桃小丸子 6 款），单品名由用户自己填；换系列/换期时要重新点数。
+6. 数据仅供参考，餐品、价格、赠品供应状态以麦当劳官方渠道实时结果为准。
 
 ---
 

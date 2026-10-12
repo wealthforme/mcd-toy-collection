@@ -3,9 +3,13 @@
 
 数据来源（全部只读 MCP 调用）：
 1. 当前在售：query-nearby-stores -> query-meals -> query-meal-detail(套餐 rounds) -> query-meal-detail(玩具 code 取图)
-2. 历史获得：order-list 历史订单里的玩具子项（部分已下市，图片取不到时用占位卡）
-3. 周边周边：mall-points-products 中 catName=玩具 / 名称含玩具的积分兑换商品
+2. 历史获得：order-list 历史订单里的玩具子项（图片按官方图床规则兜底）
+3. 周边：mall-points-products 中玩具类目 / 名称含玩具或联名的积分兑换商品
 4. 活动线索：campaign-calendar 中提到玩具的活动
+5. 合并跨城扫描 availability.json：在送款升级为"当前在售"
+
+系列款另标注 isSeries / lineupCount：开心乐园餐赠品是"一整套系列里的随机一个"，
+收藏册点亮单位是系列内单品（如海绵宝宝×航海王一套 10 款，买到哪款点亮哪款）。
 """
 import json, pathlib, sys, time, re
 
@@ -15,6 +19,15 @@ from scan_toys import find_meal_codes, toys_of_meal, toy_image, guess_series, TO
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
+
+# 系列单品数：按官方系列图（MS_<code>_600.png）人工点数，图注为「含随机玩具1个」。
+# MCP 的 query-meal-detail 只把整个系列作为一个选配项返回，拿不到系列内单品清单，
+# 因此单品数只能以官方系列图为准；未列出的系列/随机玩具预置 0，由用户按实物自行添加。
+LINEUP_COUNTS = {
+    "521991": 10,  # 海绵宝宝×航海王系列玩具（2 行 × 5）
+    "521417": 6,   # 开心乐园小马宝莉&变形金刚系列玩具（3 + 3）
+    "521325": 6,   # 樱桃小丸子定制玩具（3 + 3）
+}
 
 
 def placeholder(name, code):
@@ -182,6 +195,14 @@ def main():
 
     for t in toys.values():
         t["series"] = t.get("series") or guess_series(t["name"])
+        nm = t.get("name") or ""
+        # 系列判定：名称含「系列」/「随机玩具」，或已在官方系列图点数表里。
+        # 开心乐园餐赠品是"一整套里的随机一个"，点亮单位必须是系列内单品。
+        t["isSeries"] = (("系列" in nm) or ("随机玩具" in nm)
+                         or (t["code"] in LINEUP_COUNTS))
+        # 系列单品数来自官方系列图人工点数（图注"含随机玩具1个"），MCP 不暴露系列内单品；
+        # 表里没有的系列（含随机玩具）预置 0 款，由用户按拿到的实物自行 add。
+        t["lineupCount"] = LINEUP_COUNTS.get(t["code"], 0) if t["isSeries"] else 0
         if not t["image"] and str(t["code"]).isdigit():
             # 官方图床规则兜底：ProductPool/MS_<code>_600.png（已实测多个历史玩具可用）
             t["image"] = guess_image(t["code"])

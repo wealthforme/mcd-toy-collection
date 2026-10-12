@@ -2,7 +2,8 @@
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>开心乐园餐 · 玩具收藏与找玩具</title>
-<style>:root{--bg:#fff9ec;--panel:#fff;--line:#ecdfc0;--text:#241a06;--muted:#8a7a55;--red:#DA291C;--yellow:#FFC72C;--gold:#e8b923}
+<style>
+:root{--bg:#fff9ec;--panel:#fff;--line:#ecdfc0;--text:#241a06;--muted:#8a7a55;--red:#DA291C;--yellow:#FFC72C;--gold:#e8b923}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 "PingFang SC","Microsoft YaHei",sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:24px 20px 70px}
@@ -10,7 +11,7 @@ header.top{background:linear-gradient(120deg,#DA291C,#FFC72C 125%);color:#fff;bo
 header.top h1{margin:0 0 6px;font-size:25px}
 header.top p{margin:0;font-size:13.5px;opacity:.95}
 .bar{margin-top:14px;background:rgba(255,255,255,.3);border-radius:999px;height:12px;overflow:hidden}
-.bar i{display:block;height:100%;background:#fff;width:28.6%;border-radius:999px}
+.bar i{display:block;height:100%;background:#fff;width:0.0%;border-radius:999px}
 .pline{margin-top:7px;font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 nav.tabs{display:flex;gap:8px;margin:18px 0 4px;flex-wrap:wrap}
 nav.tabs label{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 18px;font-size:13.5px;cursor:pointer;color:#6b5a33;user-select:none}
@@ -34,11 +35,12 @@ section{margin:24px 0}
 h2{font-size:18px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
 h2::before{content:"";width:4px;height:16px;background:var(--red);border-radius:2px}
 h2 .cnt{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12px;padding:1px 8px;font-weight:400}
+.desc{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
 .grp{margin-top:18px}
 .grp h3{font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
 .grp h3 .cnt{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:11.5px;padding:1px 8px;font-weight:400}
-.desc{font-size:12.5px;color:var(--muted);margin:0 0 10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
+/* ---- 单品卡 ---- */
 .toy{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;position:relative;display:flex;flex-direction:column;gap:8px;transition:.18s}
 .toy .imgbox{background:#fff;border-radius:10px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .toy img{max-width:100%;max-height:100%;object-fit:contain;filter:grayscale(1) opacity(.5)}
@@ -53,7 +55,21 @@ h2 .cnt{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12px
 .toy.got .btn{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}
 .stamp{position:absolute;top:8px;right:8px;font-size:11px;background:#f1f2f4;color:#8a8a8a;border-radius:5px;padding:1px 7px}
 .toy.got .stamp{background:var(--gold);color:#3d2c00}
-.at{font-size:11px;color:var(--muted);text-align:right}
+/* ---- 系列卡：单品槽位 ---- */
+.toy.series{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:14px}
+.toy.series .imgbox{width:150px;height:150px;flex:none}
+.toy.series .info{flex:1;min-width:200px}
+.lineup{flex:1 1 100%;border-top:1px dashed var(--line);padding-top:10px}
+.lu-head{font-size:12.5px;color:#6b5a33;margin-bottom:8px}
+.lu-head b{color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:999px;padding:4px 10px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}
+.chip:hover{border-color:var(--gold)}
+.chip.got{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}
+.chip .pen{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px}
+.chip .pen:hover{opacity:1;background:rgba(0,0,0,.08)}
+.chip.add{background:#fff;border-style:dashed;color:#b3a483;font-weight:700}
+.chip input{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:96px;font-family:inherit}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
 .filters input,.filters select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--text)}
 .tagwrap{display:flex;gap:6px;flex-wrap:wrap}
@@ -78,11 +94,11 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
 <input type="radio" name="tab" id="t-find" class="tb">
 <header class="top">
   <h1>开心乐园餐 · 玩具收藏与找玩具</h1>
-  <p>全部数据来自麦当劳 MCP Server 只读接口 · 玩具图片取自官方图床</p>
+  <p>全部数据来自麦当劳 MCP Server 只读接口 · 玩具图片取自官方图床 · 每份乐园餐含随机玩具 1 个，按单品点亮</p>
   <div class="bar"><i></i></div>
   <div class="pline">
-    <span>收藏进度 <b id="got">2</b> / 7</span>
-    <span>总库 2026-10-12 17:29:39 · 门店扫描 2026-10-11 23:19:07</span>
+    <span>收藏进度 <b id="got">0</b> / 25</span>
+    <span>总库 2026-10-12 18:21:27 · 门店扫描 2026-10-11 23:19:07</span>
   </div>
 </header>
 
@@ -108,6 +124,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
       <span class="tag2">code 521991</span>
       <span class="tag2">海绵宝宝×航海王系列玩具</span>
       <span class="tag2">差价 + ¥0</span>
+      <span class="tag2">一套 10 款随机</span>
     </div>
     <p class="hint">数据源：<code>query-meal-detail</code> 的选配轮次 + <code>query-nearby-stores</code> 跨城门店校验</p>
   </div>
@@ -122,8 +139,8 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </section>
   <section>
     <h2>积分兑换周边<span class="cnt">3</span></h2>
-    <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目）</p>
-    <div class="grid"><div class="toy" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
+    <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目），点击卡片可整体点亮</p>
+    <div class="grid"><div class="toy single" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/3d4d37c8feb04aab.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
   <div class="info">
     <h4>Nike Book 2 麦当劳特别联名款</h4>
@@ -132,8 +149,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
-</div><div class="toy" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
+</div><div class="toy single" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
   <div class="info">
     <h4>酸黄瓜吧唧礼盒</h4>
@@ -142,8 +158,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
-</div><div class="toy" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
+</div><div class="toy single" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
   <div class="info">
     <h4>罗技键鼠套装</h4>
@@ -152,18 +167,17 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
 </div></div>
   </section>
 </div>
 
 <div class="page" id="p-coll">
   <section style="margin-top:0">
-    <h2>收藏册<span class="cnt">7</span></h2>
-    <p class="desc">买到对应玩具就点亮它，状态保存在本机 localStorage；输入关键词可筛选。
-      历史款是你真实订单里拿到过的玩具（卡片上标注了下单日期），积分周边来自麦麦商城兑换。</p>
+    <h2>收藏册<span class="cnt">25</span></h2>
+    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：点芯片点亮/取消，点 <b>✎</b> 给这款起名，
+      点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
     <div class="filters">
-      <input id="q" placeholder="搜索玩具名称 / code" autocomplete="off">
+      <input id="q" placeholder="搜索玩具名称 / 单品名 / code" autocomplete="off">
       <select id="f">
         <option value="">全部分类</option>
         <option value="current">当前在售 2</option>
@@ -172,64 +186,69 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
       </select>
       <select id="g">
         <option value="">全部状态</option>
-        <option value="got">已点亮</option>
-        <option value="todo">未点亮</option>
+        <option value="started">已有收集</option>
+        <option value="todo">尚未开始</option>
+        <option value="done">已收集齐</option>
       </select>
       <button class="btn" id="export">导出我的收藏</button>
     </div>
     <div class="grp" data-g="current">
       <h3>🔥 当前在送<span class="cnt">2</span></h3>
-      <div class="grid"><div class="toy got" data-code="521991" data-src="current" data-name="海绵宝宝×航海王系列玩具">
+      <div class="grid"><div class="toy series" data-code="521991" data-src="current" data-name="海绵宝宝×航海王系列玩具" data-lineup="10" data-got="0">
   <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具"></div>
   <div class="info">
     <h4>海绵宝宝×航海王系列玩具</h4>
     <p class="meta">当前在售 · 海绵宝宝×航海王系列玩具 · 麦当劳深圳方大城餐厅</p>
     <p class="code">code 521991<span class="badge b-avail">15 家门店在送</span></p>
   </div>
-  <button class="btn">★ 已点亮</button>
-  <div class="stamp">已收集</div>
-  <div class="at">2026-10-11 02:29:30</div>
-</div><div class="toy" data-code="7001" data-src="current" data-name="随机玩具1个">
+  <div class="lineup">
+    <div class="lu-head">一套 10 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">10</span></div>
+    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="7"><i class="nm">单品7</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="8"><i class="nm">单品8</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="9"><i class="nm">单品9</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="10"><i class="nm">单品10</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+  </div>
+</div><div class="toy series" data-code="7001" data-src="current" data-name="随机玩具1个" data-lineup="0" data-got="0">
   <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_7001_600.png" alt="随机玩具1个"></div>
   <div class="info">
     <h4>随机玩具1个</h4>
     <p class="meta">当前在售 · 2026-09-05 订单获得</p>
     <p class="code">code 7001<span class="badge b-avail">4 家门店在送</span></p>
   </div>
-  <button class="btn">☆ 点亮</button>
-  <div class="stamp">未点亮</div>
-  
+  <div class="lineup">
+    <div class="lu-head">随机款 · 已记录 <b class="lu-got">0</b> 款（点 ＋ 添加拿到的款）</div>
+    <div class="chips"><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+  </div>
 </div></div>
     </div>
     <div class="grp" data-g="history">
       <h3>🕓 历史款 · 我订单里拿到过的<span class="cnt">2</span></h3>
       <p class="desc">来自 <code>order-list</code> 真实订单解析，标注下单日期；已下市的款式同样收录</p>
-      <div class="grid"><div class="toy got" data-code="521325" data-src="history" data-name="樱桃小丸子定制玩具">
+      <div class="grid"><div class="toy series" data-code="521325" data-src="history" data-name="樱桃小丸子定制玩具" data-lineup="6" data-got="0">
   <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521325_600.png" alt="樱桃小丸子定制玩具"></div>
   <div class="info">
     <h4>樱桃小丸子定制玩具</h4>
     <p class="meta">历史款 · 2026-01-24 订单获得</p>
     <p class="code">code 521325</p>
   </div>
-  <button class="btn">★ 已点亮</button>
-  <div class="stamp">已收集</div>
-  <div class="at">2026-10-11 23:26:16</div>
-</div><div class="toy" data-code="521417" data-src="history" data-name="开心乐园小马宝莉&amp;变形金刚系列玩具">
+  <div class="lineup">
+    <div class="lu-head">一套 6 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">6</span></div>
+    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+  </div>
+</div><div class="toy series" data-code="521417" data-src="history" data-name="开心乐园小马宝莉&amp;变形金刚系列玩具" data-lineup="6" data-got="0">
   <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521417_600.png" alt="开心乐园小马宝莉&amp;变形金刚系列玩具"></div>
   <div class="info">
     <h4>开心乐园小马宝莉&amp;变形金刚系列玩具</h4>
     <p class="meta">历史款 · 2026-02-07 订单获得</p>
     <p class="code">code 521417</p>
   </div>
-  <button class="btn">☆ 点亮</button>
-  <div class="stamp">未点亮</div>
-  
+  <div class="lineup">
+    <div class="lu-head">一套 6 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">6</span></div>
+    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+  </div>
 </div></div>
     </div>
     <div class="grp" data-g="mall">
       <h3>🎁 积分兑换周边<span class="cnt">3</span></h3>
       <p class="desc">来自 <code>mall-points-products</code>，含往期限量兑换活动（卡片标注积分与时间）</p>
-      <div class="grid"><div class="toy" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
+      <div class="grid"><div class="toy single" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/3d4d37c8feb04aab.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
   <div class="info">
     <h4>Nike Book 2 麦当劳特别联名款</h4>
@@ -238,8 +257,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
-</div><div class="toy" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
+</div><div class="toy single" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
   <div class="info">
     <h4>酸黄瓜吧唧礼盒</h4>
@@ -248,8 +266,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
-</div><div class="toy" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
+</div><div class="toy single" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
   <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
   <div class="info">
     <h4>罗技键鼠套装</h4>
@@ -258,7 +275,6 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
-  
 </div></div>
     </div>
   </section>
@@ -575,7 +591,8 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
     <code>python scripts/scan_toys.py --per-city 8</code>　跨 6 城采样门店并写入 <code>data/availability.json</code><br>
     <code>python scripts/scan_toys.py --cities 深圳市,广州市 --per-city 12</code>　指定城市与门店密度<br>
     <code>python scripts/catalog.py</code>　重建玩具总库（当前款 / 历史订单 / 积分周边 / 活动）<br>
-    <code>python scripts/collection.py collect 521991 --store 1420544</code>　命令行点亮玩具（写回 <code>data/collection.json</code>）<br>
+    <code>python scripts/collection.py collect 521991 --slot 3 --name "路飞"</code>　命令行点亮系列内第 3 款<br>
+    <code>python scripts/collection.py add 7001 --name "抽到的某款"</code>　给随机玩具追加一款记录<br>
     门店检索注意：<code>query-nearby-stores</code> 的 <code>searchType=2</code> 必须 <b>city 与 keyword 同时传</b>，
     只传其一会报 <code>600058</code>。
   </div>
@@ -595,38 +612,157 @@ function saveState(s){
   mem=s;
   try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}
 }
+/* 初始状态来自服务端渲染的 data/collection.json（单品级），localStorage 优先 */
+var INIT={"slots": {"521991": [{"slot": 1, "name": "", "got": false, "at": "", "store": ""}, {"slot": 2, "name": "", "got": false, "at": "", "store": ""}, {"slot": 3, "name": "", "got": false, "at": "", "store": ""}, {"slot": 4, "name": "", "got": false, "at": "", "store": ""}, {"slot": 5, "name": "", "got": false, "at": "", "store": ""}, {"slot": 6, "name": "", "got": false, "at": "", "store": ""}, {"slot": 7, "name": "", "got": false, "at": "", "store": ""}, {"slot": 8, "name": "", "got": false, "at": "", "store": ""}, {"slot": 9, "name": "", "got": false, "at": "", "store": ""}, {"slot": 10, "name": "", "got": false, "at": "", "store": ""}], "521325": [{"slot": 1, "name": "", "got": false, "at": "", "store": ""}, {"slot": 2, "name": "", "got": false, "at": "", "store": ""}, {"slot": 3, "name": "", "got": false, "at": "", "store": ""}, {"slot": 4, "name": "", "got": false, "at": "", "store": ""}, {"slot": 5, "name": "", "got": false, "at": "", "store": ""}, {"slot": 6, "name": "", "got": false, "at": "", "store": ""}], "521417": [{"slot": 1, "name": "", "got": false, "at": "", "store": ""}, {"slot": 2, "name": "", "got": false, "at": "", "store": ""}, {"slot": 3, "name": "", "got": false, "at": "", "store": ""}, {"slot": 4, "name": "", "got": false, "at": "", "store": ""}, {"slot": 5, "name": "", "got": false, "at": "", "store": ""}, {"slot": 6, "name": "", "got": false, "at": "", "store": ""}], "7001": []}, "single": {}};
 var got=loadState();
+if(!got||!got.slots){got=JSON.parse(JSON.stringify(INIT));}
 var root=document.body;
-function paint(el,on){
+function slotsOf(c){return (got.slots[String(c)]=got.slots[String(c)]||[]);}
+function lineupTotal(card){
+  var lu=parseInt(card.getAttribute('data-lineup')||'0',10)||0;
+  return Math.max(lu,slotsOf(card.dataset.code).length);
+}
+function paintSingle(el,on){
   el.classList.toggle('got',on);
   var b=el.querySelector('.btn'); if(b) b.textContent=on?'★ 已点亮':'☆ 点亮';
   var st=el.querySelector('.stamp'); if(st) st.textContent=on?'已收集':'未点亮';
 }
 /* 同一款玩具可能在多个分区出现（如积分周边同时出现在热门精选与收藏册），点亮时同步全部副本 */
 function paintAll(c,on){
-  root.querySelectorAll('.toy[data-code="'+c+'"]').forEach(function(el){paint(el,on);});
+  root.querySelectorAll('.toy[data-code="'+c+'"]').forEach(function(el){paintSingle(el,on);});
 }
-root.querySelectorAll('.toy').forEach(function(el){
-  if(got[el.dataset.code]) paint(el,true);
-});
+function refreshCard(card){
+  var c=card.dataset.code, arr=slotsOf(c);
+  var n=0; arr.forEach(function(s){if(s.got)n++;});
+  var g=card.querySelector('.lu-got'); if(g) g.textContent=n;
+  var t=card.querySelector('.lu-total'); if(t) t.textContent=lineupTotal(card);
+  card.classList.toggle('got',n>0);
+  card.setAttribute('data-got',n);
+}
+function countGot(){
+  var n=0;
+  root.querySelectorAll('.toy.series').forEach(function(card){
+    slotsOf(card.dataset.code).forEach(function(s){if(s.got)n++;});
+  });
+  root.querySelectorAll('.toy.single').forEach(function(card){
+    if(got.single&&got.single[card.dataset.code]&&got.single[card.dataset.code].got)n++;
+  });
+  return n;
+}
+function countTotal(){
+  var n=0;
+  root.querySelectorAll('.toy.series').forEach(function(card){n+=lineupTotal(card);});
+  n+=root.querySelectorAll('.toy.single').length;
+  return n;
+}
+function syncCount(){
+  var cnt=document.getElementById('got'); if(cnt) cnt.textContent=String(countGot())+'/'+String(countTotal());
+}
+function refreshAll(){
+  root.querySelectorAll('.toy.series').forEach(refreshCard);
+  Object.keys(got.single||{}).forEach(function(c){
+    if(got.single[c].got) paintAll(c,true);
+  });
+  syncCount();
+}
+/* ---- 点击：单品芯片 / 起名 / 添加 / 单品整体点亮 ---- */
 root.addEventListener('click',function(ev){
   var t=ev.target;
   if(!(t instanceof Element)) return;
-  var b=t.closest('.toy .btn'); if(!b) return;
-  var el=b.closest('.toy'), c=el.dataset.code;
-  if(got[c]){delete got[c];paintAll(c,false);}
-  else{got[c]={at:new Date().toISOString().slice(0,10)};paintAll(c,true);}
-  saveState(got);
-  var cnt=document.getElementById('got'); if(cnt) cnt.textContent=Object.keys(got).length;
-  applyFilter();
+  var pen=t.closest('.chip .pen');
+  if(pen){ startRename(pen.parentNode); return; }
+  var add=t.closest('.chip.add');
+  if(add){ addSlot(add.closest('.toy')); return; }
+  var chip=t.closest('.chip');
+  if(chip&&chip.closest('.toy.series')){
+    var card=chip.closest('.toy'), c=card.dataset.code, slot=parseInt(chip.dataset.slot,10);
+    var arr=slotsOf(c), s=null;
+    for(var i=0;i<arr.length;i++) if(arr[i].slot===slot) s=arr[i];
+    if(!s){s={slot:slot,name:'',got:false,at:'',store:''};arr.push(s);}
+    s.got=!s.got;
+    if(s.got) s.at=new Date().toISOString().slice(0,10); else s.at='';
+    paintChip(chip,s);
+    refreshCard(card);
+    saveState(got); syncCount(); applyFilter();
+    return;
+  }
+  var b=t.closest('.toy.single .btn');
+  if(b){
+    var el=b.closest('.toy'), code=el.dataset.code;
+    var on=!(got.single&&got.single[code]&&got.single[code].got);
+    got.single=got.single||{};
+    if(on) got.single[code]={got:true,at:new Date().toISOString().slice(0,10),store:''};
+    else delete got.single[code];
+    paintAll(code,on);
+    saveState(got); syncCount(); applyFilter();
+  }
 });
+function paintChip(chip,s){
+  chip.classList.toggle('got',!!s.got);
+  var nm=(s.name||'').trim()||('单品'+s.slot);
+  chip.querySelector('.nm').textContent=(s.got?'★ ':'')+nm;
+}
+/* ---- 起名（行内编辑） ---- */
+function startRename(chip){
+  if(chip.querySelector('input')) return;
+  var s=null,arr=slotsOf(chip.closest('.toy').dataset.code),slot=parseInt(chip.dataset.slot,10);
+  for(var i=0;i<arr.length;i++) if(arr[i].slot===slot) s=arr[i];
+  var old=s&&s.name?s.name:'';
+  var nm=chip.querySelector('.nm');
+  var inp=document.createElement('input');
+  inp.value=old; inp.placeholder='这款叫什么？';
+  var closed=false;
+  /* 提交不依赖 blur：Enter 直接落库，避免 input 未获焦时 blur 不触发导致改名丢失 */
+  function commit(){
+    if(closed) return; closed=true;
+    var v=inp.value.trim();
+    if(s){ s.name=v; }
+    else if(v){ s={slot:slot,name:v,got:chip.classList.contains('got'),at:'',store:''}; arr.push(s); }
+    inp.remove(); nm.style.display='';
+    paintChip(chip,{slot:slot,name:(s&&s.name)||'',got:chip.classList.contains('got')});
+    saveState(got);
+  }
+  nm.style.display='none';
+  chip.appendChild(inp);
+  try{inp.focus(); inp.select();}catch(e){}
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault(); commit();}
+    else if(e.key==='Escape'){inp.value=old; commit();}
+  });
+  inp.addEventListener('click',function(e){e.stopPropagation();});
+}
+/* ---- 追加一款（随机玩具 / 超出预置款数） ---- */
+function addSlot(card){
+  if(!card) return;
+  var c=card.dataset.code, arr=slotsOf(c);
+  var s={slot:arr.length+1,name:'',got:false,at:'',store:''};
+  arr.push(s);
+  var chip=document.createElement('span');
+  chip.className='chip'; chip.dataset.slot=String(s.slot);
+  chip.innerHTML='<i class="nm">'+s.slot+'</i><b class="pen" title="给这款起名">✎</b>';
+  card.querySelector('.chips').insertBefore(chip,card.querySelector('.chip.add'));
+  refreshCard(card); saveState(got); syncCount();
+  startRename(chip);
+}
+/* ---- 筛选 ---- */
 var q=document.getElementById('q'),f=document.getElementById('f'),g=document.getElementById('g');
+function cardState(card){
+  if(card.classList.contains('series')){
+    var n=parseInt(card.getAttribute('data-got')||'0',10);
+    var t=lineupTotal(card);
+    return n===0?'todo':(n>=t?'done':'started');
+  }
+  return card.classList.contains('got')?'done':'todo';
+}
 function applyFilter(){
   var kw=(q.value||'').trim().toLowerCase();
   root.querySelectorAll('.toy').forEach(function(el){
-    var okKw=!kw||(el.dataset.name+' '+el.dataset.code).toLowerCase().indexOf(kw)>=0;
+    var text=(el.dataset.name+' '+el.dataset.code+' '+el.textContent).toLowerCase();
+    var okKw=!kw||text.indexOf(kw)>=0;
     var okF=!f.value||el.dataset.src===f.value;
-    var okG=!g.value||(g.value==='got'?!!got[el.dataset.code]:!got[el.dataset.code]);
+    var st=cardState(el);
+    var okG=!g.value||(g.value==='started'?st!=='todo':(g.value==='todo'?st==='todo':st==='done'));
     el.style.display=(okKw&&okF&&okG)?'':'none';
   });
   root.querySelectorAll('.grp').forEach(function(grp){
@@ -637,13 +773,21 @@ function applyFilter(){
 }
 [q,f,g].forEach(function(x){x.addEventListener('input',applyFilter);});
 document.getElementById('export').addEventListener('click',function(){
-  var rows=Object.keys(got).map(function(c){
-    var el=root.querySelector('.toy[data-code="'+c+'"]');
-    return [c,(el?el.dataset.name:''),got[c].at].join(',');
+  var rows=[['kind','code','name','slot','name_of_toy','at']];
+  root.querySelectorAll('.toy.series').forEach(function(card){
+    slotsOf(card.dataset.code).forEach(function(s){
+      rows.push(['series',card.dataset.code,card.dataset.name,s.slot,(s.name||'').replace(/,/g,'，'),s.at||'']);
+    });
   });
-  var blob=new Blob([['code','name','at'].join(',')].concat(rows).join('\n'),{type:'text/csv'});
+  root.querySelectorAll('.toy.single').forEach(function(card){
+    var on=got.single&&got.single[card.dataset.code]&&got.single[card.dataset.code].got;
+    rows.push(['single',card.dataset.code,card.dataset.name,'','',on?(got.single[card.dataset.code].at||''):'']);
+  });
+  var csv=rows.map(function(r){return r.join(',');}).join('\n');
+  var blob=new Blob([csv],{type:'text/csv'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_toys.csv';a.click();
 });
+/* ---- 门店筛选 ---- */
 var sq=document.getElementById('sq'),sc=document.getElementById('sc'),so=document.getElementById('so');
 function filterStores(){
   var kw=(sq.value||'').trim().toLowerCase();
@@ -655,5 +799,6 @@ function filterStores(){
   });
 }
 if(sq)[sq,sc,so].forEach(function(x){x.addEventListener('input',filterStores);});
+refreshAll();
 </script>
 </body></html>

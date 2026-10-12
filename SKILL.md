@@ -24,17 +24,24 @@ python scripts/build_web.py        # 生成收藏册页面
 
 或只问当前门店热送：读 `data/toys.json` 中 `source == "current"` 的条目。
 
-### 2. 收藏册点亮 / 进度
+### 2. 收藏册点亮 / 进度（单品级）
+
+每份开心乐园餐含**随机玩具 1 个**，拿到的是整套里的一款，所以点亮单位是系列内单品：
 
 ```bash
-python scripts/collection.py list
-python scripts/collection.py collect <玩具code> --store "<门店名>"
-python scripts/collection.py uncollect <玩具code>
+python scripts/collection.py list                                       # 总览：系列进度 + 每款明细
+python scripts/collection.py collect <系列code> --slot <第几款> --name "<这款叫什么>" --store "<门店>"
+python scripts/collection.py uncollect <系列code> --slot <第几款>
+python scripts/collection.py rename <系列code> --slot <第几款> --name "<新名字>"
+python scripts/collection.py add <系列code> --name "<拿到的款>"            # 随机玩具/超出预置款数时追加
+python scripts/collection.py collect <单品code>                           # 非系列单品（积分周边）整体点亮
 python scripts/collection.py stats
 python scripts/collection.py sync
 ```
 
-Web 收藏册（`web/index.html`）中点击卡片即可点亮，状态存 localStorage。
+Web 收藏册（`web/index.html`）中：系列卡点芯片点亮/取消、点 `✎` 起名、点 `＋` 添加；积分周边卡点按钮整体点亮。状态存 localStorage。
+
+系列单品数来自官方系列图点数（`catalog.py` 的 `LINEUP_COUNTS`），MCP 不提供系列内单品清单。
 
 ### 3. 找玩具（跨城门店扫描）
 
