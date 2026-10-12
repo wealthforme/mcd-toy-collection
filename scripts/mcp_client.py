@@ -91,12 +91,18 @@ class McdMcp:
 
 
 def parse_data(text):
-    """从 MCP 返回文本中提取 data 字段。返回可能是 dict / list / str"""
+    """从 MCP 返回文本中提取 data 字段。返回可能是 dict / list / str / None。
+
+    注意：不能用贪婪正则 `\\{[\\s\\S]*\\}` 抓第一个到最后一个花括号——
+    若 message 等字段里含 JSON 片段或尾部有括号，会抓到错误区间。
+    用 JSONDecoder.raw_decode 从第一个 '{' 开始解析完整 JSON 对象。
+    """
     seg = text.split("## Original Response")[-1] if "## Original Response" in text else text
-    m = re.search(r"\{[\s\S]*\}", seg)
-    if not m:
+    start = seg.find("{")
+    if start < 0:
         return None
     try:
-        return json.loads(m.group(0)).get("data")
+        obj, _ = json.JSONDecoder().raw_decode(seg[start:])
+        return obj.get("data")
     except Exception:
         return None

@@ -41,6 +41,8 @@ setx MCD_MCP_TOKEN "你的Token"            # Windows（新开终端生效）
 ```
 
 > 也支持 `MCD_MCP_TOKEN_FILE=/path/to/token.txt`。若不设环境变量，脚本会回退读取 `~/.workbuddy/mcp.json` 中 `mcd-mcp` 的配置（仅本机开发方便）。
+>
+> 在支持 MCP 的客户端（如 WorkBuddy）里使用时，直接复制仓库中的 [`mcp-config.example.json`](./mcp-config.example.json) 并将 `YOUR_MCP_TOKEN` 替换为实际 Token 即可。
 
 ### 2. 构建玩具库
 

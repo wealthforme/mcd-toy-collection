@@ -36,6 +36,47 @@ TOY_KEYWORDS = ("玩具", "公仔", "摆件", "盲盒", "拼装", "水壶", "背
 MEAL_KEYWORDS = ("开心乐园", "乐园餐")
 
 
+def merge_store_scan(data_dir, store_code, found_toys):
+    """把单门店扫描结果合并进 availability.json（门店按 code 覆盖，玩具按 code 合并）。
+
+    保持与全量城市扫描相同的输出结构，页面/CLI 只需读一个文件。
+    """
+    path = data_dir / "availability.json"
+    doc = {"toys": [], "stores": []}
+    if path.exists():
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            doc = {"toys": [], "stores": []}
+
+    store_rec = next((s for s in doc.get("stores", [])
+                      if str(s.get("storeCode")) == str(store_code)), None)
+    if store_rec is None:
+        store_rec = {"storeCode": store_code, "city": "", "open": True, "toys": []}
+        doc.setdefault("stores", []).append(store_rec)
+    store_rec["open"] = True
+    store_rec["toys"] = [{"code": c, "name": t["name"]} for c, t in found_toys.items()]
+
+    by_code = {str(t["code"]): t for t in doc.get("toys", [])}
+    for c, t in found_toys.items():
+        rec = by_code.setdefault(str(c), {"code": str(c), "name": t["name"], "image": "",
+                                          "series": guess_series(t["name"]), "stores": [],
+                                          "round": t.get("round"), "diffPrice": t.get("diffPrice")})
+        rec["image"] = rec.get("image") or t.get("image") or guess_image(c)
+        if not any(str(s.get("storeCode")) == str(store_code) for s in rec["stores"]):
+            rec["stores"].append({"storeCode": store_code, "storeName": "", "city": "",
+                                  "address": ""})
+    for t in by_code.values():
+        t["storeCount"] = len(t["stores"])
+    doc["toys"] = sorted(by_code.values(), key=lambda x: (-x["storeCount"], str(x["code"])))
+    doc["scannedAt"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    doc["storeCount"] = len(doc.get("stores", []))
+    doc["openStoreCount"] = sum(1 for s in doc.get("stores", []) if s.get("open"))
+    doc["toyCount"] = len(doc["toys"])
+    data_dir.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
 def get_stores(mcp, city, keywords, limit=8):
     """返回去重后的门店列表（不含营业状态）。"""
     seen = {}
@@ -107,28 +148,26 @@ def main():
 
     mcp = McdMcp()
 
-    # 直接指定门店模式：跨店比价（MCP 门店搜索在本账号下只返回关联门店）
+    # 直接指定门店模式：精准比对，结果合并进 availability.json（与全量模式同构）
     if args.stores:
         codes = [c.strip() for c in args.stores.split(",") if c.strip()]
-        result = []
         for sc in codes:
             meal_codes = find_meal_codes(mcp, sc)
             time.sleep(args.sleep)
-            found = []
+            found = {}
             for mc in meal_codes:
                 for t in toys_of_meal(mcp, sc, mc["code"]):
                     time.sleep(args.sleep)
-                    t["image"] = toy_image(mcp, sc, t["code"]) if t.get("code") else ""
-                    time.sleep(args.sleep)
+                    if not t.get("code"):
+                        continue
                     t["meal"] = mc["code"]
-                    found.append(t)
-            result.append({"storeCode": sc, "toys": found, "mealCount": len(meal_codes)})
-            print(f"{sc}: 乐园餐 {len(meal_codes)} 个 | 玩具 " + "、".join(f"{t['name']}" for t in found))
-        DATA.mkdir(parents=True, exist_ok=True)
-        (DATA / "stores_scan.json").write_text(
-            json.dumps({"scannedAt": time.strftime("%Y-%m-%d %H:%M:%S"), "stores": result},
-                       ensure_ascii=False, indent=1), encoding="utf-8")
-        print(f"\n完成 {len(result)} 家门店 -> {DATA / 'stores_scan.json'}")
+                    t["image"] = toy_image(mcp, sc, t["code"]) or guess_image(t["code"])
+                    time.sleep(args.sleep)
+                    found[str(t["code"])] = t
+            print(f"{sc}: 乐园餐 {len(meal_codes)} 个 | 玩具 " +
+                  "、".join(t["name"] for t in found.values()))
+            merge_store_scan(DATA, sc, found)
+        print(f"\n完成 {len(codes)} 家门店，已合并写入 {DATA / 'availability.json'}")
         return
 
     cities = [c.strip() for c in args.cities.split(",") if c.strip()] or list(DEFAULT_CITIES)

@@ -18,8 +18,8 @@ coll_doc = json.loads((DATA / "collection.json").read_text(encoding="utf-8")) \
     if (DATA / "collection.json").exists() else {"collected": {}}
 
 ALL = toys_doc.get("toys", [])
-# 门店可用性按玩具 code 汇总，供前端展示"哪些店有"
-AVAIL_BY_TOY = {t["code"]: t for t in avail_doc.get("toys", [])}
+# 门店可用性按玩具 code 汇总，供前端展示"哪些店有"（键统一转 str，防类型漂移）
+AVAIL_BY_TOY = {str(t["code"]): t for t in avail_doc.get("toys", [])}
 
 
 def meta_line(t):
@@ -29,7 +29,7 @@ def meta_line(t):
         v = t.get(key)
         if v:
             bits.append(f"{v}{suffix}")
-    if str(t.get("diffPrice") or "").strip() not in ("", "+ ¥0", "+¥0", "0"):
+    if str(t.get("diffPrice") or "").strip() not in ("", "+ ¥0", "+¥0", "0", "None"):
         bits.append(f"差价 {t['diffPrice']}")
     if t.get("price") and str(t["price"]) not in ("0", ""):
         bits.append(f"¥{t['price']}")
@@ -97,7 +97,7 @@ else:
 events_html = "".join(
     f'''<div class="ev">{('<img loading="lazy" src="' + E(e["image"]) + '" alt="">') if e.get("image") else ''}
     <div><h4>{E(e["title"])}</h4><p>{E((e.get("desc") or "")[:170])}</p></div></div>'''
-    for e in dict((e["title"], e) for e in toys_doc.get("events", [])).values())
+    for e in {(e["title"], e.get("desc", "")): e for e in toys_doc.get("events", [])}.values())
 
 mall_html = grid(mal)
 

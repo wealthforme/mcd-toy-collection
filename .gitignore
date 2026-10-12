@@ -11,7 +11,8 @@ __pycache__/
 .vscode/
 .idea/
 
-# 用户本地收藏状态与临时扫描结果（示例数据保留）
+# 用户本地收藏状态（点亮记录按本机保存，不入库）
 data/collection.json
-data/stores_scan.json
-data/_probe_*.json
+
+# 调试探测输出（probe_stores.py 生成，仅供本地查看工具 schema）
+data/tools_schema.json

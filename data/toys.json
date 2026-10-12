@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-12 00:31:18",
+ "generatedAt": "2026-10-12 15:54:22",
  "store": {
   "storeCode": "1420544",
   "storeName": "麦当劳深圳方大城餐厅",
@@ -15,12 +15,26 @@
    "stores": [],
    "status": "当前在售",
    "series": "海绵宝宝×航海王系列玩具",
-   "meal": "9900016054",
+   "meal": "9900016055",
    "mealCat": "开心乐园",
    "round": "海绵宝宝×航海王系列玩具",
    "diffPrice": "+ ¥0",
    "storeName": "麦当劳深圳方大城餐厅",
    "storeCode": "1420544",
+   "availableStores": 15,
+   "imageIsPlaceholder": false
+  },
+  {
+   "code": "7001",
+   "name": "随机玩具1个",
+   "image": "https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_7001_600.png",
+   "source": "current",
+   "stores": [],
+   "status": "当前在售",
+   "series": "常规/随机玩具",
+   "orderId": "1030147390000807480452609120",
+   "orderTime": "2026-09-05 12:43:48",
+   "availableStores": 4,
    "imageIsPlaceholder": false
   },
   {
@@ -29,7 +43,7 @@
    "image": "https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521325_600.png",
    "source": "history",
    "stores": [],
-   "status": "历史款（已下市）",
+   "status": "历史款",
    "series": "常规/随机玩具",
    "orderId": "1030323460000629513017437187",
    "orderTime": "2026-01-24 12:58:11",
@@ -41,22 +55,10 @@
    "image": "https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521417_600.png",
    "source": "history",
    "stores": [],
-   "status": "历史款（已下市）",
+   "status": "历史款",
    "series": "常规/随机玩具",
    "orderId": "1030279620000549989638484279",
    "orderTime": "2026-02-07 12:25:06",
-   "imageIsPlaceholder": false
-  },
-  {
-   "code": "7001",
-   "name": "随机玩具1个",
-   "image": "https://menu-img.mcd.cn/pcm/prod/menu/20240828/product/MS_7001_600.png",
-   "source": "history",
-   "stores": [],
-   "status": "历史款",
-   "series": "常规/随机玩具",
-   "orderId": "1030147390000807480452609120",
-   "orderTime": "2026-09-05 12:43:48",
    "imageIsPlaceholder": false
   },
   {
@@ -107,8 +109,8 @@
  ],
  "stats": {
   "total": 6,
-  "current": 1,
-  "history": 3,
-  "mall": 4
+  "current": 2,
+  "history": 2,
+  "mall": 2
  }
 }

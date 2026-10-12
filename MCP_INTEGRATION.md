@@ -36,7 +36,7 @@
   order-list{}
     └─> list[].orderProductList → 递归 comboItemList
         └─> name 含「玩具」的条目 → productCode
-            └─> query-meal-detail{code} → image（查不到则占位卡）
+            └─> 图床规则 ProductPool/MS_<code>_600.png 补官方图，HEAD 校验 200 才采用
 
 找玩具（跨城）
   scan_toys.py --per-city 8

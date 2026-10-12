@@ -36,15 +36,24 @@ def main():
 
     def put(code, name, image, source, extra=None):
         if not code:
-            return
-        rec = toys.setdefault(str(code), {"code": str(code), "name": name or "玩具", "image": image or "",
-                                          "source": source, "stores": [], "status": "", "series": ""})
+            return False
+        key = str(code)
+        rec = toys.get(key)
+        if rec is None:
+            rec = toys[key] = {"code": key, "name": name or "玩具", "image": image or "",
+                               "source": source, "stores": [], "status": "", "series": ""}
+            new = True
+        else:
+            new = False
+            if source == "current" and rec["source"] != "current":
+                rec["source"] = "current"
         if image and not rec["image"]:
             rec["image"] = image
         if extra:
-            rec.update({k: v for k, v in extra.items() if v})
+            rec.update({k: v for k, v in extra.items() if v is not None and v != ""})
         if name and rec["name"] in ("", "玩具"):
             rec["name"] = name
+        return new
 
     # ---- 1. 当前在售 ----
     # searchType=1 返回账号关联门店，稳定性最高；跨店覆盖由 scan_toys.py 负责
@@ -62,19 +71,18 @@ def main():
             time.sleep(0.15)
             for t in toys_of_meal(mcp, store["storeCode"], mc["code"]):
                 time.sleep(0.15)
-                img = toy_image(mcp, store["storeCode"], t["code"])
+                img = toy_image(mcp, store["storeCode"], t["code"]) or guess_image(t["code"])
                 time.sleep(0.15)
                 put(t["code"], t["name"], img, "current",
                     {"status": "当前在售", "meal": mc["code"], "mealCat": mc.get("cat"),
                      "round": t.get("round"), "diffPrice": t.get("diffPrice"),
                      "storeName": store["storeName"], "storeCode": store["storeCode"]})
-                current.append(t["code"])
-        print(f"当前在售玩具 {len(current)} 款")
+                current.append(str(t["code"]))
+        print(f"当前在售玩具 {len(set(current))} 款")
 
     # ---- 2. 历史订单 ----
     d = mcp.data("order-list", {})
     time.sleep(0.15)
-    hist = 0
 
     def walk(node, out):
         """递归展开套餐子项，收集含玩具关键词的条目"""
@@ -88,6 +96,7 @@ def main():
             for x in node:
                 walk(x, out)
 
+    hist = 0
     if isinstance(d, dict):
         for o in (d.get("list") or []):
             oid = o.get("orderId")
@@ -97,14 +106,14 @@ def main():
             for it in found:
                 nm = str(it.get("name") or it.get("productName") or "")
                 code = it.get("productCode") or it.get("code")
-                img = ""
-                if code and store:
+                img = guess_image(code) if code else ""
+                if code and store and not img:
                     img = toy_image(mcp, store["storeCode"], code)
                     time.sleep(0.15)
-                put(code or f"hist-{hist}", nm, img, "history",
-                    {"status": "历史款（已下市）" if not img else "历史款",
-                     "orderId": oid, "orderTime": otime})
-                hist += 1
+                if put(code or f"hist-{hist}", nm, img, "history",
+                       {"status": "历史款（已下市）" if not img else "历史款",
+                        "orderId": oid, "orderTime": otime}):
+                    hist += 1
     print(f"历史订单玩具 {hist} 款")
 
     # ---- 3. 商城周边 ----
@@ -119,10 +128,10 @@ def main():
             istoy = (str(r.get("catName")) == "玩具") or any(k in nm for k in TOY_KEYWORDS)
             if not istoy:
                 continue
-            put(r.get("spuId"), nm, r.get("spuImage"), "mall",
-                {"status": "积分兑换", "point": r.get("point"), "price": r.get("price"),
-                 "catName": r.get("catName"), "spuId": r.get("spuId")})
-            mall += 1
+            if put(r.get("spuId"), nm, r.get("spuImage"), "mall",
+                   {"status": "积分兑换", "point": r.get("point"), "price": r.get("price"),
+                    "catName": r.get("catName"), "spuId": r.get("spuId")}):
+                mall += 1
     print(f"商城玩具周边 {mall} 款")
 
     # ---- 4. 活动线索 ----
@@ -142,6 +151,31 @@ def main():
                                "desc": re.sub(r"\s+", " ", mc.group(1)).strip() if mc else ""})
     print(f"相关活动 {len(events)} 条")
 
+    # ---- 5. 合并跨城扫描结果：availability.json 里在送的款升级为"当前在售" ----
+    avail_path = DATA / "availability.json"
+    if avail_path.exists():
+        try:
+            avail = json.loads(avail_path.read_text(encoding="utf-8"))
+        except Exception:
+            avail = {}
+        promoted = 0
+        for at in avail.get("toys") or []:
+            code = str(at.get("code") or "")
+            if not code or code not in toys:
+                continue
+            rec = toys[code]
+            rec["availableStores"] = len(at.get("stores") or [])
+            if rec["source"] != "current":
+                # 同一 code 在别的城市门店仍在送：以"当前在售"为主分类，历史来源信息保留在 orderId/orderTime
+                rec["source"] = "current"
+                rec["status"] = "当前在售"
+                promoted += 1
+            if not rec.get("image") or not str(rec["image"]).startswith("http"):
+                rec["image"] = at.get("image") or rec["image"]
+        if promoted:
+            print(f"按跨城扫描结果升级为当前在售：{promoted} 款")
+        current = [t["code"] for t in toys.values() if t["source"] == "current"]
+
     for t in toys.values():
         t["series"] = t.get("series") or guess_series(t["name"])
         if not t["image"] and str(t["code"]).isdigit():
@@ -154,12 +188,16 @@ def main():
             t["imageIsPlaceholder"] = False
 
     order = {"current": 0, "history": 1, "mall": 2}
+    by_src = {"current": 0, "history": 0, "mall": 0}
+    for t in toys.values():
+        by_src[t["source"]] = by_src.get(t["source"], 0) + 1
     out = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "store": store or {},
         "toys": sorted(toys.values(), key=lambda x: (order.get(x["source"], 9), -len(x.get("stores") or []), x["code"])),
         "events": events,
-        "stats": {"total": len(toys), "current": len(current), "history": hist, "mall": mall},
+        "stats": {"total": len(toys), "current": by_src["current"], "history": by_src["history"],
+                  "mall": by_src["mall"]},
     }
     DATA.mkdir(parents=True, exist_ok=True)
     (DATA / "toys.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")

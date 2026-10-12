@@ -12,7 +12,7 @@
 
 4. **骨架搭建**：WorkBuddy 生成 `mcp_client.py`（Streamable HTTP 封装 + 业务状态解析）、`catalog.py`（玩具总库）、`scan_toys.py`（门店扫描 / 跨店比价）、`collection.py`（收藏册 CLI）、`build_web.py`（单文件收藏册页面），并补齐 `README.md`、`MCP_INTEGRATION.md`、`SKILL.md`、`CONTEST_DECLARATION.md`（官方原文未改动）、`.env.example`。
 
-5. **真实数据验证**：实际跑通链路，当前库中共 6 款玩具（当前在售 1、历史款 3、积分兑换 2），全部拿到麦当劳官方图片。
+5. **真实数据验证**：实际跑通链路，当前库中共 6 款玩具（当前在售 2、历史款 2、积分兑换 2），全部拿到麦当劳官方图片。跨城扫描中在送的款（如成都的「随机玩具1个」）会被合并升级为「当前在售」，同时保留历史订单来源信息。
 
 6. **跨城「找玩具」突破**：此前误判 `query-nearby-stores` 受账号限制只能返回一家门店；WorkBuddy 拉取 `tools/list` 的入参 schema 后逐组合验证，定位到真实原因是 `searchType=2` 时 **city 与 keyword 必须同时传**（缺任一返回 `600058`）。据此重写检索逻辑，用行政区关键词去重扩充门店池，完成 6 城 48 家门店扫描，产出 `data/availability.json`。
 
