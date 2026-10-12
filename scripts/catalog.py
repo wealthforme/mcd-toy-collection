@@ -11,7 +11,7 @@ import json, pathlib, sys, time, re
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from mcp_client import McdMcp, guess_image
-from scan_toys import find_meal_codes, toys_of_meal, toy_image, TOY_KEYWORDS
+from scan_toys import find_meal_codes, toys_of_meal, toy_image, guess_series, TOY_KEYWORDS
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -125,12 +125,16 @@ def main():
             continue
         for r in rows:
             nm = str(r.get("spuName") or "")
-            istoy = (str(r.get("catName")) == "玩具") or any(k in nm for k in TOY_KEYWORDS)
+            # 玩具类目 / 名称含玩具关键词 / 联名周边（如 Nike Book 2 麦当劳特别联名款）均计入收藏册
+            istoy = (str(r.get("catName")) == "玩具") or any(k in nm for k in TOY_KEYWORDS) \
+                or ("联名" in nm and str(r.get("price")) in ("0", ""))
             if not istoy:
                 continue
             if put(r.get("spuId"), nm, r.get("spuImage"), "mall",
                    {"status": "积分兑换", "point": r.get("point"), "price": r.get("price"),
-                    "catName": r.get("catName"), "spuId": r.get("spuId")}):
+                    "catName": r.get("catName"), "spuId": r.get("spuId"),
+                    "selling": r.get("selling"), "upTime": r.get("upTime"),
+                    "downTime": r.get("downTime")}):
                 mall += 1
     print(f"商城玩具周边 {mall} 款")
 
@@ -202,14 +206,6 @@ def main():
     DATA.mkdir(parents=True, exist_ok=True)
     (DATA / "toys.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"\n总库 {len(toys)} 款 -> {DATA / 'toys.json'}")
-
-
-def guess_series(name):
-    n = str(name or "")
-    for sep in ("×", "x", "X"):
-        if sep in n:
-            return n
-    return "常规/随机玩具"
 
 
 if __name__ == "__main__":

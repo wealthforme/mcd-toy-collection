@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-12 15:54:22",
+ "generatedAt": "2026-10-12 17:29:39",
  "store": {
   "storeCode": "1420544",
   "storeName": "麦当劳深圳方大城餐厅",
@@ -14,7 +14,7 @@
    "source": "current",
    "stores": [],
    "status": "当前在售",
-   "series": "海绵宝宝×航海王系列玩具",
+   "series": "海绵宝宝×航海王",
    "meal": "9900016055",
    "mealCat": "开心乐园",
    "round": "海绵宝宝×航海王系列玩具",
@@ -31,7 +31,7 @@
    "source": "current",
    "stores": [],
    "status": "当前在售",
-   "series": "常规/随机玩具",
+   "series": "",
    "orderId": "1030147390000807480452609120",
    "orderTime": "2026-09-05 12:43:48",
    "availableStores": 4,
@@ -44,7 +44,7 @@
    "source": "history",
    "stores": [],
    "status": "历史款",
-   "series": "常规/随机玩具",
+   "series": "樱桃小丸子",
    "orderId": "1030323460000629513017437187",
    "orderTime": "2026-01-24 12:58:11",
    "imageIsPlaceholder": false
@@ -56,9 +56,26 @@
    "source": "history",
    "stores": [],
    "status": "历史款",
-   "series": "常规/随机玩具",
+   "series": "小马宝莉&变形金刚",
    "orderId": "1030279620000549989638484279",
    "orderTime": "2026-02-07 12:25:06",
+   "imageIsPlaceholder": false
+  },
+  {
+   "code": "16800",
+   "name": "Nike Book 2 麦当劳特别联名款",
+   "image": "https://img.mcd.cn/ecs/3d4d37c8feb04aab.jpg",
+   "source": "mall",
+   "stores": [],
+   "status": "积分兑换",
+   "series": "Nike Book 2",
+   "point": "8888",
+   "price": "0",
+   "catName": "鞋袜",
+   "spuId": 16800,
+   "selling": "独一无二，梦幻联动，Nike Book 2 麦当劳特别联名款 每人限购一双，每日 14:00 准时开抢",
+   "upTime": "2026-06-05 14:00:00",
+   "downTime": "2026-06-05 16:00:00",
    "imageIsPlaceholder": false
   },
   {
@@ -68,11 +85,14 @@
    "source": "mall",
    "stores": [],
    "status": "积分兑换",
-   "series": "常规/随机玩具",
+   "series": "酸黄瓜吧唧",
    "point": "800",
    "price": "0",
    "catName": "玩具",
    "spuId": 17643,
+   "selling": "800 积分兑换酸黄瓜吧唧礼盒！ 8.12 限量 150 份｜8.13 限量 100 份｜8.14 限量 100 份，先兑先得",
+   "upTime": "2026-08-14 14:00:00",
+   "downTime": "2026-08-14 23:59:59",
    "imageIsPlaceholder": false
   },
   {
@@ -82,11 +102,14 @@
    "source": "mall",
    "stores": [],
    "status": "积分兑换",
-   "series": "常规/随机玩具",
+   "series": "罗技键鼠",
    "point": "6666",
    "price": "0",
    "catName": "玩具",
    "spuId": 17694,
+   "selling": "积分兑大礼，罗技键鼠套装6666积分兑换！8月17日-8月21日，每日限量 5 份，先到先得",
+   "upTime": "2026-08-21 14:00:00",
+   "downTime": "2026-08-21 23:59:59",
    "imageIsPlaceholder": false
   }
  ],
@@ -108,9 +131,9 @@
   }
  ],
  "stats": {
-  "total": 6,
+  "total": 7,
   "current": 2,
   "history": 2,
-  "mall": 2
+  "mall": 3
  }
 }

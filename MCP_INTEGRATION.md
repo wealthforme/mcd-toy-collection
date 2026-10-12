@@ -59,7 +59,7 @@
 | 1 | HTTP 200 不代表业务成功 | 必须解析返回文本中的 `"success"` / `"code"` / `"message"` |
 | 2 | `query-meal-detail` 返回字段很精简 | 只有 `code / name / rounds / image / supportModify`，价格在 `query-meals` 的 `meals` 映射里 |
 | 3 | 玩具图片要用玩具 code 再查一次 | 套餐 `rounds` 的 choices 里没有 image 字段 |
-| 4 | 已下市玩具查不到 | `query-meal-detail` 返回业务失败/空，需要占位兜底 |
+| 4 | 已下市玩具查不到详情 | `query-meal-detail` 返回业务失败/空，改按图床规则 `MS_<code>_600.png` HEAD 校验取官方图（见 #11），仍失败才用本地 SVG 占位 |
 | 5 | `order-list` 商品字段是 `orderProductList` | 不是 `goods` / `productList`，套餐子项在 `comboItemList` |
 | 6 | `campaign-calendar` 返回 Markdown 不是 JSON | 不能走 JSON 解析分支，需正则提取文本块 |
 | 7 | `query-nearby-stores` 每次只回 1 家门店 | `searchType=1` 是「收藏餐厅」语义；换 `searchType=2` 且 **city + keyword 同时传**才能按城市召回，**缺任一都报 `600058`** |
@@ -67,6 +67,8 @@
 | 9 | 金额单位统一是「分」 | `calculate-price` 等接口返回的金额需 /100 |
 | 10 | 非营业时段门店查不到菜单 | `query-meals` 返回 `600057 门店可能已关闭或不在营业时间`，扫描脚本需单独标记并跳过 |
 | 11 | 历史玩具官方图拿不到 | 按图床规则 `ProductPool/product/MS_<code>_600.png` HEAD 校验补全，下市商品同样可用 |
+| 12 | 商城周边只看 `catName=玩具` 会漏联名款 | Nike Book 2 麦当劳特别联名款 `catName` 是「鞋袜」，需按名称含「联名」补充收录 |
+| 13 | 前端首行读写 localStorage 会整体挂掉 | 预览面板沙箱 iframe / 隐私模式下抛 `SecurityError`，整个脚本初始化即死；页签切换应改纯 CSS（`radio + :checked`），存储读写统一 try/catch 兜底 |
 
 ## 凭证安全
 

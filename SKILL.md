@@ -52,9 +52,13 @@ python scripts/scan_toys.py --stores 1420544,1420207          # 指定门店精�
 ## 数据说明
 
 - 玩具图片一律为官方图：在售款取 `query-meal-detail` 的 `image`；下市款按图床规则
-  `https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_<code>_600.png` 校验补全
+  `https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_<code>_600.png` 校验补全；
+  积分周边取 `mall-points-products` 的 `spuImage`
 - 「当前在售」来自套餐 `rounds` 中名称含「玩具」的选配轮
+- 收藏册按「当前在送 / 历史款（订单里拿到过的）/ 积分兑换周边」三组呈现，历史款卡片标注下单日期
 - 页面包含三块：当前热送大卡、可点亮的电子收藏册、按城市/营业状态筛选的门店清单
+- 三个页签为 `radio + :checked` 纯 CSS 切换，不依赖 JS；localStorage 不可用时自动降级为内存态，
+  点亮、筛选、导出仍可用
 
 ## 已知限制
 

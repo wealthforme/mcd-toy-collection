@@ -260,14 +260,33 @@ def main():
 
 
 
+SERIES_NOISE = ("开心乐园", "麦当劳", "特别联名款", "定制", "系列玩具", "玩具", "礼盒",
+                "套装", "1个", "随机", "限定")
+
+
 def guess_series(name):
-    n = str(name or "")
-    for sep in ("×", "x", "X", "＊"):
+    """从玩具名提取系列/IP 名。
+
+    「开心乐园小马宝莉&变形金刚系列玩具」→「小马宝莉&变形金刚」；
+    「樱桃小丸子定制玩具」→「樱桃小丸子」；「Nike Book 2 麦当劳特别联名款」→「Nike Book 2」。
+    提不出有效信息时返回空串（由上层决定是否展示），不再一律标「常规/随机玩具」。
+    """
+    n = str(name or "").strip()
+    if not n:
+        return ""
+    for sep in ("×", "x", "X", "＊", "&", "和"):
         if sep in n:
-            return n
-    if "系列" in n:
-        return n
-    return "常规/随机玩具"
+            n = n.replace("＆", "&")
+            break
+    changed = True
+    while changed:
+        changed = False
+        for noise in SERIES_NOISE:
+            if noise in n:
+                n = n.replace(noise, " ").strip()
+                changed = True
+    n = " ".join(n.split()).strip(" ·|-—")
+    return n if len(n) >= 2 else ""
 
 
 if __name__ == "__main__":
