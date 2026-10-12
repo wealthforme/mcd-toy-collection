@@ -63,13 +63,17 @@ h2 .cnt{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12px
 .lu-head{font-size:12.5px;color:#6b5a33;margin-bottom:8px}
 .lu-head b{color:var(--red)}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:999px;padding:4px 10px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}
+.chip{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:3px;width:84px;padding:6px 4px 5px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:12px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}
 .chip:hover{border-color:var(--gold)}
 .chip.got{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}
-.chip .pen{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px}
+.chip img{width:46px;height:46px;object-fit:contain;display:block}
+.chip:not(.got) img{filter:grayscale(.7);opacity:.5}
+.chip .nm{font-style:normal;font-size:10.5px;line-height:1.2;width:100%;height:2.5em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all;text-align:center}
+.chip .pen{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px;position:absolute;top:2px;right:3px}
 .chip .pen:hover{opacity:1;background:rgba(0,0,0,.08)}
+.chip.noimg,.chip.add{flex-direction:row;width:auto;padding:4px 10px;gap:4px}
 .chip.add{background:#fff;border-style:dashed;color:#b3a483;font-weight:700}
-.chip input{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:96px;font-family:inherit}
+.chip input{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:56px;font-family:inherit}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
 .filters input,.filters select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--text)}
 .tagwrap{display:flex;gap:6px;flex-wrap:wrap}
@@ -113,7 +117,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
     <h2>当前热送<span class="cnt">1</span></h2>
     <p class="desc">全国统一配送的当期联名玩具，数据实时来自套餐选配轮次</p>
     <div class="hot">
-  <img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具">
+  <img loading="lazy" src="assets/series/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具">
   <div class="txt">
     <span class="ribbon">当前热送</span>
     <h3>海绵宝宝×航海王系列玩具</h3>
@@ -132,16 +136,16 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </section>
   <section>
     <h2>相关活动<span class="cnt">3</span></h2>
-    <div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/63bd426f45860fbe26025234054bf773.png" alt="">
-    <div><h4>乐享90分钟高质量亲子时间</h4><p>打造高质量陪伴时光🎊 9本热门书籍且每月更新！ 更有开心乐园餐+随机玩具一份🎁 好吃又好玩！快报名参加吧~</p></div></div><div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/3120858b8460868281cdc39f9aae1578.jpg" alt="">
-    <div><h4>麦当劳 X PEACEMINUSONE</h4><p>周边第二弹——联名徽章即将发售 任意餐品消费加39.9元即可得 集结MCD爱心、小雏菊和经典薯条元素🍟 一套三枚🖤限量珍藏 10月15日10:45开售 更有APP专享积分抢先购10:40开抢</p></div></div><div class="ev"><img loading="lazy" src="https://cms-cdn.mcd.cn/img/short-content/fb40c37c172886ee1235c2ed21f3bde4.jpg" alt="">
+    <div class="ev"><img loading="lazy" src="assets/events/ev0.jpg" alt="">
+    <div><h4>乐享90分钟高质量亲子时间</h4><p>打造高质量陪伴时光🎊 9本热门书籍且每月更新！ 更有开心乐园餐+随机玩具一份🎁 好吃又好玩！快报名参加吧~</p></div></div><div class="ev"><img loading="lazy" src="assets/events/ev1.jpg" alt="">
+    <div><h4>麦当劳 X PEACEMINUSONE</h4><p>周边第二弹——联名徽章即将发售 任意餐品消费加39.9元即可得 集结MCD爱心、小雏菊和经典薯条元素🍟 一套三枚🖤限量珍藏 10月15日10:45开售 更有APP专享积分抢先购10:40开抢</p></div></div><div class="ev"><img loading="lazy" src="assets/events/ev2.jpg" alt="">
     <div><h4>第三周周边即将开售✨限定主题丝巾！</h4><p>丝巾搭配棒球帽的潮流谁懂😎 麦当劳「我就喜欢」限定丝巾 任意餐品消费加 39.9 元即可得 颈间、包袋、手腕、头饰一巾多玩🤔 叠搭联名棒球帽&amp;徽章随心玩出专属潮流造型✨ 10月22日10:45开售 更有APP专享积分抢先购10:40开抢 get时尚icon同款潮流造型</p></div></div>
   </section>
   <section>
     <h2>积分兑换周边<span class="cnt">3</span></h2>
     <p class="desc">来自 <code>mall-points-products</code>（catRuleIds=2&gt;8 玩具类目），点击卡片可整体点亮</p>
     <div class="grid"><div class="toy single" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/3d4d37c8feb04aab.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/16800.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
   <div class="info">
     <h4>Nike Book 2 麦当劳特别联名款</h4>
     <p class="meta">积分兑换 · 8888 积分 · 兑换至 2026-06-05 · 独一无二，梦幻联动，Nike Book 2 麦当劳特别联名款 每人限购一双，每日 14:00 准时开抢</p>
@@ -150,7 +154,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
 </div><div class="toy single" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/17643.jpg" alt="酸黄瓜吧唧礼盒"></div>
   <div class="info">
     <h4>酸黄瓜吧唧礼盒</h4>
     <p class="meta">积分兑换 · 800 积分 · 兑换至 2026-08-14 · 800 积分兑换酸黄瓜吧唧礼盒！ 8.12 限量 150 份｜8.13 限量 100 份｜8.14 限量 100 份，先兑先得</p>
@@ -159,7 +163,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
 </div><div class="toy single" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/17694.jpg" alt="罗技键鼠套装"></div>
   <div class="info">
     <h4>罗技键鼠套装</h4>
     <p class="meta">积分兑换 · 6666 积分 · 兑换至 2026-08-21 · 积分兑大礼，罗技键鼠套装6666积分兑换！8月17日-8月21日，每日限量 5 份，先到先得</p>
@@ -174,8 +178,8 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
 <div class="page" id="p-coll">
   <section style="margin-top:0">
     <h2>收藏册<span class="cnt">25</span></h2>
-    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：点芯片点亮/取消，点 <b>✎</b> 给这款起名，
-      点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
+    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：单品图由官方系列整图切割而来，
+      点单品图点亮/取消，点 <b>✎</b> 给这款起名，点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
     <div class="filters">
       <input id="q" placeholder="搜索玩具名称 / 单品名 / code" autocomplete="off">
       <select id="f">
@@ -195,7 +199,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
     <div class="grp" data-g="current">
       <h3>🔥 当前在送<span class="cnt">2</span></h3>
       <div class="grid"><div class="toy series" data-code="521991" data-src="current" data-name="海绵宝宝×航海王系列玩具" data-lineup="10" data-got="0">
-  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/series/MS_521991_600.png" alt="海绵宝宝×航海王系列玩具"></div>
   <div class="info">
     <h4>海绵宝宝×航海王系列玩具</h4>
     <p class="meta">当前在售 · 海绵宝宝×航海王系列玩具 · 麦当劳深圳方大城餐厅</p>
@@ -203,10 +207,10 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <div class="lineup">
     <div class="lu-head">一套 10 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">10</span></div>
-    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="7"><i class="nm">单品7</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="8"><i class="nm">单品8</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="9"><i class="nm">单品9</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="10"><i class="nm">单品10</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+    <div class="chips"><span class="chip" data-slot="1" data-def="海绵宝宝×路飞"><img loading="lazy" src="assets/toys/521991_1.png" alt="海绵宝宝×路飞"><i class="nm">海绵宝宝×路飞</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2" data-def="珊迪×奈美"><img loading="lazy" src="assets/toys/521991_2.png" alt="珊迪×奈美"><i class="nm">珊迪×奈美</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3" data-def="派大星×索隆"><img loading="lazy" src="assets/toys/521991_3.png" alt="派大星×索隆"><i class="nm">派大星×索隆</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4" data-def="痞老板×乌索普"><img loading="lazy" src="assets/toys/521991_4.png" alt="痞老板×乌索普"><i class="nm">痞老板×乌索普</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5" data-def="飞行荷兰人×黑胡子"><img loading="lazy" src="assets/toys/521991_5.png" alt="飞行荷兰人×黑胡子"><i class="nm">飞行荷兰人×黑胡子</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6" data-def="小蜗×乔巴"><img loading="lazy" src="assets/toys/521991_6.png" alt="小蜗×乔巴"><i class="nm">小蜗×乔巴</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="7" data-def="章鱼哥×山治"><img loading="lazy" src="assets/toys/521991_7.png" alt="章鱼哥×山治"><i class="nm">章鱼哥×山治</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="8" data-def="蟹老板×甚平"><img loading="lazy" src="assets/toys/521991_8.png" alt="蟹老板×甚平"><i class="nm">蟹老板×甚平</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="9" data-def="珍珍×罗宾"><img loading="lazy" src="assets/toys/521991_9.png" alt="珍珍×罗宾"><i class="nm">珍珍×罗宾</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="10" data-def="史密提×布鲁克"><img loading="lazy" src="assets/toys/521991_10.png" alt="史密提×布鲁克"><i class="nm">史密提×布鲁克</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
   </div>
 </div><div class="toy series" data-code="7001" data-src="current" data-name="随机玩具1个" data-lineup="0" data-got="0">
-  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_7001_600.png" alt="随机玩具1个"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/series/MS_7001_600.png" alt="随机玩具1个"></div>
   <div class="info">
     <h4>随机玩具1个</h4>
     <p class="meta">当前在售 · 2026-09-05 订单获得</p>
@@ -222,7 +226,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
       <h3>🕓 历史款 · 我订单里拿到过的<span class="cnt">2</span></h3>
       <p class="desc">来自 <code>order-list</code> 真实订单解析，标注下单日期；已下市的款式同样收录</p>
       <div class="grid"><div class="toy series" data-code="521325" data-src="history" data-name="樱桃小丸子定制玩具" data-lineup="6" data-got="0">
-  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521325_600.png" alt="樱桃小丸子定制玩具"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/series/MS_521325_600.png" alt="樱桃小丸子定制玩具"></div>
   <div class="info">
     <h4>樱桃小丸子定制玩具</h4>
     <p class="meta">历史款 · 2026-01-24 订单获得</p>
@@ -230,10 +234,10 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <div class="lineup">
     <div class="lu-head">一套 6 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">6</span></div>
-    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+    <div class="chips"><span class="chip" data-slot="1" data-def="小丸子抱雪球"><img loading="lazy" src="assets/toys/521325_1.png" alt="小丸子抱雪球"><i class="nm">小丸子抱雪球</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2" data-def="小丸子相框"><img loading="lazy" src="assets/toys/521325_2.png" alt="小丸子相框"><i class="nm">小丸子相框</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3" data-def="雪人储钱罐"><img loading="lazy" src="assets/toys/521325_3.png" alt="雪人储钱罐"><i class="nm">雪人储钱罐</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4" data-def="小丸子台历"><img loading="lazy" src="assets/toys/521325_4.png" alt="小丸子台历"><i class="nm">小丸子台历</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5" data-def="雪橇"><img loading="lazy" src="assets/toys/521325_5.png" alt="雪橇"><i class="nm">雪橇</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6" data-def="小丸子铅笔"><img loading="lazy" src="assets/toys/521325_6.png" alt="小丸子铅笔"><i class="nm">小丸子铅笔</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
   </div>
 </div><div class="toy series" data-code="521417" data-src="history" data-name="开心乐园小马宝莉&amp;变形金刚系列玩具" data-lineup="6" data-got="0">
-  <div class="imgbox"><img loading="lazy" src="https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_521417_600.png" alt="开心乐园小马宝莉&amp;变形金刚系列玩具"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/series/MS_521417_600.png" alt="开心乐园小马宝莉&amp;变形金刚系列玩具"></div>
   <div class="info">
     <h4>开心乐园小马宝莉&amp;变形金刚系列玩具</h4>
     <p class="meta">历史款 · 2026-02-07 订单获得</p>
@@ -241,7 +245,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   </div>
   <div class="lineup">
     <div class="lu-head">一套 6 款 · 已收集 <b class="lu-got">0</b>/<span class="lu-total">6</span></div>
-    <div class="chips"><span class="chip" data-slot="1"><i class="nm">单品1</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2"><i class="nm">单品2</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3"><i class="nm">单品3</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4"><i class="nm">单品4</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5"><i class="nm">单品5</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6"><i class="nm">单品6</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
+    <div class="chips"><span class="chip" data-slot="1" data-def="小马宝莉·蓝"><img loading="lazy" src="assets/toys/521417_1.png" alt="小马宝莉·蓝"><i class="nm">小马宝莉·蓝</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="2" data-def="小马宝莉·粉"><img loading="lazy" src="assets/toys/521417_2.png" alt="小马宝莉·粉"><i class="nm">小马宝莉·粉</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="3" data-def="小马宝莉·紫"><img loading="lazy" src="assets/toys/521417_3.png" alt="小马宝莉·紫"><i class="nm">小马宝莉·紫</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="4" data-def="变形金刚·大黄蜂"><img loading="lazy" src="assets/toys/521417_4.png" alt="变形金刚·大黄蜂"><i class="nm">变形金刚·大黄蜂</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="5" data-def="变形金刚·擎天柱"><img loading="lazy" src="assets/toys/521417_5.png" alt="变形金刚·擎天柱"><i class="nm">变形金刚·擎天柱</i><b class="pen" title="给这款起名">✎</b></span><span class="chip" data-slot="6" data-def="变形金刚·威震天"><img loading="lazy" src="assets/toys/521417_6.png" alt="变形金刚·威震天"><i class="nm">变形金刚·威震天</i><b class="pen" title="给这款起名">✎</b></span><span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span></div>
   </div>
 </div></div>
     </div>
@@ -249,7 +253,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
       <h3>🎁 积分兑换周边<span class="cnt">3</span></h3>
       <p class="desc">来自 <code>mall-points-products</code>，含往期限量兑换活动（卡片标注积分与时间）</p>
       <div class="grid"><div class="toy single" data-code="16800" data-src="mall" data-name="Nike Book 2 麦当劳特别联名款">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/3d4d37c8feb04aab.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/16800.jpg" alt="Nike Book 2 麦当劳特别联名款"></div>
   <div class="info">
     <h4>Nike Book 2 麦当劳特别联名款</h4>
     <p class="meta">积分兑换 · 8888 积分 · 兑换至 2026-06-05 · 独一无二，梦幻联动，Nike Book 2 麦当劳特别联名款 每人限购一双，每日 14:00 准时开抢</p>
@@ -258,7 +262,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
 </div><div class="toy single" data-code="17643" data-src="mall" data-name="酸黄瓜吧唧礼盒">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b23170613362944d.jpg" alt="酸黄瓜吧唧礼盒"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/17643.jpg" alt="酸黄瓜吧唧礼盒"></div>
   <div class="info">
     <h4>酸黄瓜吧唧礼盒</h4>
     <p class="meta">积分兑换 · 800 积分 · 兑换至 2026-08-14 · 800 积分兑换酸黄瓜吧唧礼盒！ 8.12 限量 150 份｜8.13 限量 100 份｜8.14 限量 100 份，先兑先得</p>
@@ -267,7 +271,7 @@ footer{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}
   <button class="btn">☆ 点亮</button>
   <div class="stamp">未点亮</div>
 </div><div class="toy single" data-code="17694" data-src="mall" data-name="罗技键鼠套装">
-  <div class="imgbox"><img loading="lazy" src="https://img.mcd.cn/ecs/b1830d7dc1ea9a89.jpg" alt="罗技键鼠套装"></div>
+  <div class="imgbox"><img loading="lazy" src="assets/mall/17694.jpg" alt="罗技键鼠套装"></div>
   <div class="info">
     <h4>罗技键鼠套装</h4>
     <p class="meta">积分兑换 · 6666 积分 · 兑换至 2026-08-21 · 积分兑大礼，罗技键鼠套装6666积分兑换！8月17日-8月21日，每日限量 5 份，先到先得</p>
@@ -699,7 +703,7 @@ root.addEventListener('click',function(ev){
 });
 function paintChip(chip,s){
   chip.classList.toggle('got',!!s.got);
-  var nm=(s.name||'').trim()||('单品'+s.slot);
+  var nm=(s.name||'').trim()||chip.getAttribute('data-def')||('单品'+s.slot);
   chip.querySelector('.nm').textContent=(s.got?'★ ':'')+nm;
 }
 /* ---- 起名（行内编辑） ---- */
@@ -739,7 +743,7 @@ function addSlot(card){
   var s={slot:arr.length+1,name:'',got:false,at:'',store:''};
   arr.push(s);
   var chip=document.createElement('span');
-  chip.className='chip'; chip.dataset.slot=String(s.slot);
+  chip.className='chip noimg'; chip.dataset.slot=String(s.slot);
   chip.innerHTML='<i class="nm">'+s.slot+'</i><b class="pen" title="给这款起名">✎</b>';
   card.querySelector('.chips').insertBefore(chip,card.querySelector('.chip.add'));
   refreshCard(card); saveState(got); syncCount();

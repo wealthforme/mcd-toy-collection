@@ -31,6 +31,9 @@ if coll_doc.get("version") != 2:  # 兼容 v1：旧记录视为系列第 1 款
 ALL = toys_doc.get("toys", [])
 SLOTS = coll_doc.get("slots") or {}
 SINGLE = coll_doc.get("single") or {}
+# 单品切割图：code -> [{slot,name,img}]，由 scripts/cut_toys.py 从官方系列整图切出
+SLOT_IMGS = json.loads((DATA / "slot_images.json").read_text(encoding="utf-8")) \
+    if (DATA / "slot_images.json").exists() else {}
 # 按官方系列图点数预置单品槽位（未命名），保证一整套都能在册、逐款点亮
 _padded = False
 for _t in ALL:
@@ -81,6 +84,13 @@ def avail_badge(t):
 
 
 def img_of(t):
+    """优先仓库内本地图片（自包含，不依赖外链图床），缺失时回退数据里的官方图床 URL。"""
+    code = str(t.get("code") or "")
+    if code:
+        for p in sorted((WEB / "assets" / "series").glob(f"MS_{code}_600.*")):
+            return p.relative_to(WEB).as_posix()
+        for p in sorted((WEB / "assets" / "mall").glob(f"{code}.*")):
+            return p.relative_to(WEB).as_posix()
     return t.get("image") or ""
 
 
@@ -100,19 +110,24 @@ def single_card(t):
 </div>'''
 
 
-# ---------- 系列卡（展开成单品槽位） ----------
+# ---------- 系列卡（展开成单品槽位，每槽带切割出的单品图） ----------
 def series_card(t):
     code = str(t["code"])
     slots = SLOTS.get(code) or []
     lineup = int(t.get("lineupCount") or 0)
     total = max(lineup, len(slots))
     got = sum(1 for s in slots if s.get("got"))
+    imgs = {int(s["slot"]): s for s in SLOT_IMGS.get(code, [])}
     chips = []
     for s in slots:
-        nm = (s.get("name") or "").strip() or f"单品{s['slot']}"
+        si = imgs.get(int(s["slot"]))
+        nm = (s.get("name") or "").strip() or (si or {}).get("name") or f"单品{s['slot']}"
+        img = f'<img loading="lazy" src="{E(si["img"])}" alt="{E(nm)}">' if si else ""
         chips.append(
-            f'<span class="chip{" got" if s.get("got") else ""}" data-slot="{s["slot"]}">'
-            f'<i class="nm">{"★ " if s.get("got") else ""}{E(nm)}</i><b class="pen" title="给这款起名">✎</b></span>')
+            f'<span class="chip{" got" if s.get("got") else ""}{"" if si else " noimg"}" '
+            f'data-slot="{s["slot"]}" data-def="{E((si or {}).get("name", ""))}">'
+            f'{img}<i class="nm">{"★ " if s.get("got") else ""}{E(nm)}</i>'
+            f'<b class="pen" title="给这款起名">✎</b></span>')
     chips.append('<span class="chip add" data-slot="add" title="添加一款（拿到的新款）">＋</span>')
     if total:
         head = f'一套 {total} 款 · 已收集 <b class="lu-got">{got}</b>/<span class="lu-total">{total}</span>'
@@ -171,7 +186,7 @@ hot_cities = sorted({s["city"] for s in hot_stores})
 # ---------- 热门精选：热送卡 + 活动 + 周边推荐 ----------
 if hot:
     hot_html = f'''<div class="hot">
-  <img loading="lazy" src="{E(hot.get('image',''))}" alt="{E(hot.get('name',''))}">
+  <img loading="lazy" src="{E(img_of(hot))}" alt="{E(hot.get('name',''))}">
   <div class="txt">
     <span class="ribbon">当前热送</span>
     <h3>{E(hot.get('name',''))}</h3>
@@ -190,10 +205,17 @@ if hot:
 else:
     hot_html = '<p class="desc">当前门店未返回玩具选配项</p>'
 
+def event_img(i, e):
+    """活动图同样优先本地 assets/events/evN.*，缺失回退官方 CDN。"""
+    for p in sorted((WEB / "assets" / "events").glob(f"ev{i}.*")):
+        return p.relative_to(WEB).as_posix()
+    return e.get("image") or ""
+
+
 events_html = "".join(
-    f'''<div class="ev">{('<img loading="lazy" src="' + E(e["image"]) + '" alt="">') if e.get("image") else ''}
+    f'''<div class="ev">{('<img loading="lazy" src="' + E(event_img(i, e)) + '" alt="">') if event_img(i, e) else ''}
     <div><h4>{E(e["title"])}</h4><p>{E((e.get("desc") or "")[:170])}</p></div></div>'''
-    for e in {(e["title"], e.get("desc", "")): e for e in toys_doc.get("events", [])}.values())
+    for i, e in enumerate({(e["title"], e.get("desc", "")): e for e in toys_doc.get("events", [])}.values()))
 
 mall_html = grid(mal)
 
@@ -282,13 +304,17 @@ h2 .cnt{{background:#f2e6c4;color:var(--muted);border-radius:999px;font-size:12p
 .lu-head{{font-size:12.5px;color:#6b5a33;margin-bottom:8px}}
 .lu-head b{{color:var(--red)}}
 .chips{{display:flex;flex-wrap:wrap;gap:7px}}
-.chip{{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:999px;padding:4px 10px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}}
+.chip{{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:3px;width:84px;padding:6px 4px 5px;border:1px solid var(--line);background:#f6f2e6;color:#9a8a63;border-radius:12px;font-size:12.3px;cursor:pointer;user-select:none;transition:.15s}}
 .chip:hover{{border-color:var(--gold)}}
 .chip.got{{background:var(--gold);border-color:var(--gold);color:#3d2c00;font-weight:600}}
-.chip .pen{{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px}}
+.chip img{{width:46px;height:46px;object-fit:contain;display:block}}
+.chip:not(.got) img{{filter:grayscale(.7);opacity:.5}}
+.chip .nm{{font-style:normal;font-size:10.5px;line-height:1.2;width:100%;height:2.5em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all;text-align:center}}
+.chip .pen{{font-style:normal;font-size:10.5px;opacity:.45;border-radius:4px;padding:0 2px;position:absolute;top:2px;right:3px}}
 .chip .pen:hover{{opacity:1;background:rgba(0,0,0,.08)}}
+.chip.noimg,.chip.add{{flex-direction:row;width:auto;padding:4px 10px;gap:4px}}
 .chip.add{{background:#fff;border-style:dashed;color:#b3a483;font-weight:700}}
-.chip input{{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:96px;font-family:inherit}}
+.chip input{{border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-size:12.3px;width:56px;font-family:inherit}}
 .filters{{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}}
 .filters input,.filters select{{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--text)}}
 .tagwrap{{display:flex;gap:6px;flex-wrap:wrap}}
@@ -347,8 +373,8 @@ footer{{margin-top:28px;text-align:center;font-size:12.3px;color:var(--muted)}}
 <div class="page" id="p-coll">
   <section style="margin-top:0">
     <h2>收藏册<span class="cnt">{total}</span></h2>
-    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：点芯片点亮/取消，点 <b>✎</b> 给这款起名，
-      点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
+    <p class="desc">每份开心乐园餐含<b>随机玩具 1 个</b>——系列卡按单品点亮：单品图由官方系列整图切割而来，
+      点单品图点亮/取消，点 <b>✎</b> 给这款起名，点 <b>＋</b> 添加拿到的新款。状态保存在本机 localStorage。</p>
     <div class="filters">
       <input id="q" placeholder="搜索玩具名称 / 单品名 / code" autocomplete="off">
       <select id="f">
@@ -513,7 +539,7 @@ root.addEventListener('click',function(ev){{
 }});
 function paintChip(chip,s){{
   chip.classList.toggle('got',!!s.got);
-  var nm=(s.name||'').trim()||('单品'+s.slot);
+  var nm=(s.name||'').trim()||chip.getAttribute('data-def')||('单品'+s.slot);
   chip.querySelector('.nm').textContent=(s.got?'★ ':'')+nm;
 }}
 /* ---- 起名（行内编辑） ---- */
@@ -553,7 +579,7 @@ function addSlot(card){{
   var s={{slot:arr.length+1,name:'',got:false,at:'',store:''}};
   arr.push(s);
   var chip=document.createElement('span');
-  chip.className='chip'; chip.dataset.slot=String(s.slot);
+  chip.className='chip noimg'; chip.dataset.slot=String(s.slot);
   chip.innerHTML='<i class="nm">'+s.slot+'</i><b class="pen" title="给这款起名">✎</b>';
   card.querySelector('.chips').insertBefore(chip,card.querySelector('.chip.add'));
   refreshCard(card); saveState(got); syncCount();

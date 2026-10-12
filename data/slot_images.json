@@ -1,0 +1,184 @@
+{
+ "521991": [
+  {
+   "slot": 1,
+   "name": "海绵宝宝×路飞",
+   "img": "assets/toys/521991_1.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 106,
+   "h": 156
+  },
+  {
+   "slot": 2,
+   "name": "珊迪×奈美",
+   "img": "assets/toys/521991_2.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 106,
+   "h": 159
+  },
+  {
+   "slot": 3,
+   "name": "派大星×索隆",
+   "img": "assets/toys/521991_3.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 96,
+   "h": 177
+  },
+  {
+   "slot": 4,
+   "name": "痞老板×乌索普",
+   "img": "assets/toys/521991_4.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 87,
+   "h": 165
+  },
+  {
+   "slot": 5,
+   "name": "飞行荷兰人×黑胡子",
+   "img": "assets/toys/521991_5.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 121,
+   "h": 167
+  },
+  {
+   "slot": 6,
+   "name": "小蜗×乔巴",
+   "img": "assets/toys/521991_6.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 98,
+   "h": 136
+  },
+  {
+   "slot": 7,
+   "name": "章鱼哥×山治",
+   "img": "assets/toys/521991_7.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 88,
+   "h": 163
+  },
+  {
+   "slot": 8,
+   "name": "蟹老板×甚平",
+   "img": "assets/toys/521991_8.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 130,
+   "h": 163
+  },
+  {
+   "slot": 9,
+   "name": "珍珍×罗宾",
+   "img": "assets/toys/521991_9.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 83,
+   "h": 160
+  },
+  {
+   "slot": 10,
+   "name": "史密提×布鲁克",
+   "img": "assets/toys/521991_10.png",
+   "src": "assets/series-src/MS_521991_600.png",
+   "w": 103,
+   "h": 173
+  }
+ ],
+ "521417": [
+  {
+   "slot": 1,
+   "name": "小马宝莉·蓝",
+   "img": "assets/toys/521417_1.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 177,
+   "h": 200
+  },
+  {
+   "slot": 2,
+   "name": "小马宝莉·粉",
+   "img": "assets/toys/521417_2.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 171,
+   "h": 199
+  },
+  {
+   "slot": 3,
+   "name": "小马宝莉·紫",
+   "img": "assets/toys/521417_3.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 160,
+   "h": 200
+  },
+  {
+   "slot": 4,
+   "name": "变形金刚·大黄蜂",
+   "img": "assets/toys/521417_4.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 128,
+   "h": 240
+  },
+  {
+   "slot": 5,
+   "name": "变形金刚·擎天柱",
+   "img": "assets/toys/521417_5.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 175,
+   "h": 173
+  },
+  {
+   "slot": 6,
+   "name": "变形金刚·威震天",
+   "img": "assets/toys/521417_6.png",
+   "src": "assets/series-src/MS_521417_600.png",
+   "w": 143,
+   "h": 171
+  }
+ ],
+ "521325": [
+  {
+   "slot": 1,
+   "name": "小丸子抱雪球",
+   "img": "assets/toys/521325_1.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 214,
+   "h": 193
+  },
+  {
+   "slot": 2,
+   "name": "小丸子相框",
+   "img": "assets/toys/521325_2.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 210,
+   "h": 216
+  },
+  {
+   "slot": 3,
+   "name": "雪人储钱罐",
+   "img": "assets/toys/521325_3.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 162,
+   "h": 190
+  },
+  {
+   "slot": 4,
+   "name": "小丸子台历",
+   "img": "assets/toys/521325_4.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 188,
+   "h": 237
+  },
+  {
+   "slot": 5,
+   "name": "雪橇",
+   "img": "assets/toys/521325_5.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 196,
+   "h": 228
+  },
+  {
+   "slot": 6,
+   "name": "小丸子铅笔",
+   "img": "assets/toys/521325_6.png",
+   "src": "assets/series-src/MS_521325_600.png",
+   "w": 85,
+   "h": 234
+  }
+ ]
+}

@@ -34,12 +34,13 @@
 | 开心乐园小马宝莉&变形金刚系列玩具 | 6 | 历史订单获得 |
 | 随机玩具1个 | 不定 | 任意系列随机款，拿到哪款点 ＋ 添加哪款 |
 
-系列内单品清单 MCP 不提供（`query-meal-detail` 只把整个系列作为一个选配项返回），单品数按**官方系列图**点数预置，名字由用户自己填（✎）。
+系列内单品清单 MCP 不提供（`query-meal-detail` 只把整个系列作为一个选配项返回），单品数按**官方系列图**点数预置，单品图由 `scripts/cut_toys.py` 从官方系列整图**逐款切割**得到，名字默认取官方联名配对（可 ✎ 改）。
 
-**玩具图片**（全部为官方图床真实资源，无占位图）：
+**玩具图片**（全部为官方图床真实资源，无占位图；构建时下载到 `web/assets/` 本地化，页面不依赖外链）：
 - 在售款：取 `query-meal-detail` 对玩具 code 返回的 `image`；
 - 历史 / 下市款：按官方图床规则 `https://menu-img.mcd.cn/pcm/prod/menu/ProductPool/product/MS_<code>_600.png` 兜底，HEAD 校验 200 才采用（`mcp_client.guess_image`）；
-- 积分周边：直接取 `mall-points-products` 返回的 `spuImage`。
+- 积分周边：直接取 `mall-points-products` 返回的 `spuImage`；
+- **单品图**：`cut_toys.py` 按 alpha 投影定位系列整图里的每个单品单元格（透明背景、两行网格、底部红字排除在外），裁剪 + 紧致 trim 输出透明 PNG 到 `web/assets/toys/`，并在 `data/slot_images.json` 记录槽位名。系列卡左侧仍显示**完整系列整图**，下方每个单品槽位配各自的切割图：点亮后彩色显示，未点亮灰度。
 
 **交互实现**：三个页签用 `radio + :checked` 纯 CSS 切换，不依赖 JavaScript；收藏状态存 localStorage，并对 localStorage 不可用（沙箱 iframe / 隐私模式）做了 try/catch 兜底，两种环境下点亮、筛选、导出均可用（已用无头浏览器在"禁 localStorage"环境下回归测试通过）。
 
@@ -75,6 +76,8 @@ python scripts/catalog.py
 ```bash
 python scripts/build_web.py
 ```
+
+> 切换新系列时先跑 `python scripts/cut_toys.py`：从 `web/assets/series-src/` 的官方系列整图切出单品图到 `web/assets/toys/` 并刷新 `data/slot_images.json`，再构建页面。
 
 双击打开 `web/index.html` 即可查看、点击点亮（状态保存在浏览器 localStorage）。
 
@@ -124,6 +127,7 @@ mcd-toy-collection/
 │   ├── mcp_client.py         MCP 调用封装（Streamable HTTP + 业务状态解析 + 图床校验）
 │   ├── catalog.py            构建玩具总库（当前/历史/商城/活动）
 │   ├── scan_toys.py          跨城门店扫描 → 玩具可得性矩阵
+│   ├── cut_toys.py           官方系列整图 → 单品切割图（web/assets/toys/）
 │   ├── collection.py         收藏册 CLI（点亮/取消/统计/同步）
 │   ├── build_web.py          生成 web/index.html
 │   └── probe_stores.py       探测门店类工具的入参 schema（调试用）
@@ -132,12 +136,19 @@ mcd-toy-collection/
 ├── data/
 │   ├── toys.json             玩具总库（当前/历史/积分周边/活动，含官方图 URL）
 │   ├── availability.json     跨城门店可得性（玩具 × 门店矩阵）
+│   ├── slot_images.json      系列单品切割图映射（code → 槽位/名字/文件）
 │   └── collection.json       点亮记录（version 2：slots 系列内单品 + single 非系列单品）
 └── web/
-    └── index.html            单文件站点：热门精选 / 电子收藏册 / 找玩具
+    ├── index.html            单文件站点：热门精选 / 电子收藏册 / 找玩具
+    └── assets/               本地化图片（自包含，不依赖外链图床）
+        ├── series/           官方系列整图（收藏册系列卡左侧显示）
+        ├── toys/             22 张单品切割图（透明 PNG，槽位芯片显示）
+        ├── mall/             积分周边图
+        ├── events/           活动图
+        └── series-src/       切割源图（cut_toys.py 输入，可复切）
 ```
 
-零第三方依赖，只用 Python 标准库（3.9+）。
+数据链路零第三方依赖，只用 Python 标准库（3.9+）；仅 `cut_toys.py`（切图）额外需要 `Pillow` + `numpy`，网页本身是纯静态 HTML，无任何 JS 框架。
 
 ---
 
@@ -155,7 +166,7 @@ mcd-toy-collection/
 2. **城市关键词召回有限**：`query-nearby-stores` 单次最多返回约 5 家门店，脚本用多个行政区关键词去重扩充；仍是抽样，不是全国全量。
 3. **玩具配送基本全国统一**：本次扫描仅识别出 2 款在送玩具（海绵宝宝×航海王系列 15 家门店 + 成都随机玩具 4 家门店），跨店差异小，"找玩具"的实际价值主要体现在按距离找具体门店。
 4. **收藏册玩具数量取决于账号历史**：历史款来自本账号 `order-list` 的真实订单（当前 4 单中含 3 款玩具），换账号跑会得到不同结果。
-5. **系列内单品清单 MCP 不提供**：`query-meal-detail` 只把整个系列作为一个选配项返回，拿不到"一套里有哪几款、各叫什么"。单品数按官方系列图点数预置（海绵宝宝×航海王 10 款、小马宝莉&变形金刚 6 款、樱桃小丸子 6 款），单品名由用户自己填；换系列/换期时要重新点数。
+5. **系列内单品清单 MCP 不提供**：`query-meal-detail` 只把整个系列作为一个选配项返回，拿不到"一套里有哪几款、各叫什么"。单品数按官方系列图点数预置（海绵宝宝×航海王 10 款、小马宝莉&变形金刚 6 款、樱桃小丸子 6 款）；单品图由 `cut_toys.py` 从系列整图切割，单品名按官方联名阵容预填（可 ✎ 改）；换系列/换期时重跑 `cut_toys.py` 即可。
 6. 数据仅供参考，餐品、价格、赠品供应状态以麦当劳官方渠道实时结果为准。
 
 ---
